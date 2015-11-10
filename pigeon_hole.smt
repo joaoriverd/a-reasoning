@@ -1,0 +1,62 @@
+(benchmark pigeon_hole
+:logic QF_UF
+:extrapreds (
+(p11) (p12) (p13) (p14) (p15)
+(p21) (p22) (p23) (p24) (p25)
+(p31) (p32) (p33) (p34) (p35)
+(p41) (p42) (p43) (p44) (p45)
+)
+:formula
+(and 
+ ;Cn
+ (or p11 p21 p31 p41)
+ (or p12 p22 p32 p42)
+ (or p13 p23 p33 p43)
+ (or p14 p24 p34 p44)
+ (or p15 p25 p35 p45)
+ 
+ ;Rn
+ (or (not p11) (not p12))
+ (or (not p11) (not p13))
+ (or (not p12) (not p13))
+ (or (not p11) (not p14))
+ (or (not p12) (not p14))
+ (or (not p13) (not p14))
+ (or (not p11) (not p15))
+ (or (not p12) (not p15))
+ (or (not p13) (not p15))
+ (or (not p14) (not p15))
+
+ (or (not p21) (not p22))
+ (or (not p21) (not p23))
+ (or (not p22) (not p23))
+ (or (not p21) (not p24))
+ (or (not p22) (not p24))
+ (or (not p23) (not p24))
+ (or (not p21) (not p25))
+ (or (not p22) (not p25))
+ (or (not p23) (not p25))
+ (or (not p24) (not p25))
+
+ (or (not p31) (not p32))
+ (or (not p31) (not p33))
+ (or (not p32) (not p33))
+ (or (not p31) (not p34))
+ (or (not p32) (not p34))
+ (or (not p33) (not p34))
+ (or (not p31) (not p35))
+ (or (not p32) (not p35))
+ (or (not p33) (not p35))
+ (or (not p34) (not p35))
+ 
+ (or (not p41) (not p42))
+ (or (not p41) (not p43))
+ (or (not p42) (not p43))
+ (or (not p41) (not p44))
+ (or (not p42) (not p44))
+ (or (not p43) (not p44))
+ (or (not p41) (not p45))
+ (or (not p42) (not p45))
+ (or (not p43) (not p45))
+ (or (not p44) (not p45))
+))
