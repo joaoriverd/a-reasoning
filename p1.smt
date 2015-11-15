@@ -26,7 +26,7 @@
  (= (+ C1 C2 C3 C4 C5 C6) 10)
  (= (+ D1 D2 D3 D4 D5 D6) 5)
  
- ;The truck has a masimum capacity of 7800 Kg
+ ;The truck has a maximum capacity of 7800 Kg
  (<= (+ (* 700 N1) (* 800 P1) (* 1000 S1) (* 1500 C1) (* 100 D1)) 7800)
  (<= (+ (* 700 N2) (* 800 P2) (* 1000 S2) (* 1500 C2) (* 100 D2)) 7800)
  (<= (+ (* 700 N3) (* 800 P3) (* 1000 S3) (* 1500 C3) (* 100 D3)) 7800)
@@ -56,7 +56,7 @@
  (< D5 2)
  (< D6 2)
  
- ;(= Total_P 24)
+ (= Total_P 24)
 ))
 
 
