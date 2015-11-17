@@ -9,7 +9,7 @@
  (C1 Int) (C2 Int) (C3 Int) (C4 Int) (C5 Int) (C6 Int)
  (D1 Int) (D2 Int) (D3 Int) (D4 Int) (D5 Int) (D6 Int)
  (Total_P Int)
-)
+) s
 :formula 
 (and
  ;Avoid negative values
