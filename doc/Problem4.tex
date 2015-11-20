@@ -1,0 +1,284 @@
+\subsection*{Problem 4}
+
+Seven integer variables $a_{1}$, $a_{2}$, $a_{3}$, $a_{4}$, $a_{5}$, $a_{6}$, $a_{7}$ are given, for which the initial value of $a_{i}$ is $i$ for $i = 1, . . . , 7$. The following steps are defined: choose $i$ with $1 < i < 7$ and execute
+\begin{center}
+$a_{i} := a_{i−1} + a_{i+1}$,\\
+\end{center}
+that is, $a_{i}$ gets the sum of the values of its neighbors and all other values remain unchanged. Show how it is possible that after a number of steps there is a number $\geq 50$ that occurs at least twice in $a_{1}$, $a_{2}$, $a_{3}$, $a_{4}$, $a_{5}$, $a_{6}$, $a_{7}$.
+\vspace{4mm}
+
+\subsection*{Solution:}
+
+We generalize this problem by defining $n$ integer variables $a_{1}, a_{2} . . . a_{n}$, with the same initialization pattern, where $a_{i}$ is $i$ for $i = 1, . . . , n$. We also generalize the defined step, where $i$ can be chosen within the range of $1 < i < n$. The part where the selected variable gets the sum of the value of its neighbors stays the same, whereas the restriction is generalized in the form that after $m$ number of steps there is a number $ P \geq 50$ that occurs at least twice in $a_{1}, a_{2}, . . . , a_{n}$.
+
+For doing so, we introduce $n\times (m+1)$ integer variables $a_{ij}$ for $i = 1, . . . , n$ and $j = 0, . . . , m$, where $a_{ij}$ represents the variable $a_{i}$ after $j$ number of steps. We also introduce $m$ integer variables $C_k$ for $k = 1, . . . , m$, where $C_k$ is the chosen index $i$ to execute the procedure for step $k$.
+
+The problem specifies to initialize the values of $a_i$. This is expressed with the introduced variables by the formula
+\[ \bigwedge_{i=1}^n (a_{i0} = i).\]
+
+Also we have to specified the boundaries of the chosen variable, so it has to be selected within the range of $1 < i < n$. This can be expressed by the formula
+\[ \bigwedge_{k=1}^m 1<C_k<n.\]
+
+Next we express the step that after selecting a variable, it gets the sum of the values of its neighbors and all other values remain unchanged. For clarity, we split this into two conditions. One to express that the remaining variables remain with the same value, and the other to execute the sum of the neighbors. The first one can easily be expressed with the introduced variables by specifying that if $C_k$ is equal to $l$, then the values for $a_{ik}$ with $i$ different to $l$ will be the same as the values of the previous step $a_{i(k-1)}$. This is expressed with the formula
+\[ \bigwedge_{k=1}^{m} \bigwedge_{l=2}^{n-1}(C_k = l) \rightarrow (\bigwedge_{i: 1 \leq i \leq n \wedge i \neq l} a_{ik} = a_{i(k-1)}).\]
+
+Similarly, the second condition can be expressed by specifying that if $C_k$ is equal to $l$, then the value of $a_{lk}$ should be equal to the sum of its neighbors in the previous step $a_{(l-1)(k-1)}$ and $a_{(l+1)(k-1)}$. This is expressed with the formula
+\[ \bigwedge_{k=1}^{m} \bigwedge_{l=2}^{n-1}(C_k = l) \rightarrow (a_{lk} = a_{(l-1)(k-1)} + a_{(l+1)(k-1)}).\]
+
+It is worth to mention that these formulas are taking the conjunction considering $l$ running from $2$ to $n-1$. This is done this way because these are the only possible values that $C_k$ can have, as specified in formula (2).
+
+Finally, we consider the requirement that after $m$ number of steps there is a number $P \geq 50$ that occurs at least twice. This is expressed by the formulas
+\[ \bigvee_{i,i^{\prime}: 1\leq i < i^{\prime} \leq m} (a_{im} = P \wedge a_{i^{\prime} m} = P)\]
+\[ P \geq 50.\]
+
+The total formula now consists of the conjunction of all these
+ingredients, that is,
+\[ \bigwedge_{i=1}^n (a_{i0} = i) \;\;\wedge\]
+\[ \bigwedge_{k=1}^m 1<C_k<n \;\;\wedge\]
+\[ \bigwedge_{k=1}^{m} \bigwedge_{l=2}^{n-1}(C_k = l) \rightarrow (\bigwedge_{i: 1 \leq i \leq n \wedge i \neq l} a_{ik} = a_{i(k-1)}) \;\;\wedge\]
+\[ \bigwedge_{k=1}^{m} \bigwedge_{l=2}^{n-1}(C_k = l) \rightarrow (a_{lk} = a_{(l-1)(k-1)} + a_{(l+1)(k-1)}) \;\;\wedge\]
+\[ \bigvee_{i,i^{\prime}: 1\leq i < i^{\prime} \leq m} (a_{im} = P \wedge a_{i^{\prime} m} = P) \;\;\wedge\]
+\[ P \geq 50\]
+
+This formula can be expressed in SMT syntax, for instance, for $n=7$ and $m=10$ one can generate
+
+{\footnotesize
+
+{\tt (benchmark part1\_4.smt}
+
+{\tt :logic QF\_UFLIA}
+
+{\tt :extrafuns}
+
+{\tt ((a1\_0 Int)  (a2\_0 Int)  (a3\_0 Int)  (a4\_0 Int)  (a5\_0 Int)  (a6\_0 Int)  (a7\_0 Int)}
+
+{\tt (a1\_1 Int)  (a2\_1 Int)  (a3\_1 Int)  (a4\_1 Int)  (a5\_1 Int)  (a6\_1 Int)  (a7\_1 Int)}
+
+{\tt (a1\_2 Int)  (a2\_2 Int)  (a3\_2 Int)  (a4\_2 Int)  (a5\_2 Int)  (a6\_2 Int)  (a7\_2 Int)}
+
+{\tt (a1\_3 Int)  (a2\_3 Int)  (a3\_3 Int)  (a4\_3 Int)  (a5\_3 Int)  (a6\_3 Int)  (a7\_3 Int)}
+
+{\tt (a1\_4 Int)  (a2\_4 Int)  (a3\_4 Int)  (a4\_4 Int)  (a5\_4 Int)  (a6\_4 Int)  (a7\_4 Int)}
+
+{\tt (a1\_5 Int)  (a2\_5 Int)  (a3\_5 Int)  (a4\_5 Int)  (a5\_5 Int)  (a6\_5 Int)  (a7\_5 Int)}
+
+{\tt (a1\_6 Int)  (a2\_6 Int)  (a3\_6 Int)  (a4\_6 Int)  (a5\_6 Int)  (a6\_6 Int)  (a7\_6 Int)}
+
+{\tt (a1\_7 Int)  (a2\_7 Int)  (a3\_7 Int)  (a4\_7 Int)  (a5\_7 Int)  (a6\_7 Int)  (a7\_7 Int)}
+
+{\tt (a1\_8 Int)  (a2\_8 Int)  (a3\_8 Int)  (a4\_8 Int)  (a5\_8 Int)  (a6\_8 Int)  (a7\_8 Int)}
+
+{\tt (a1\_9 Int)  (a2\_9 Int)  (a3\_9 Int)  (a4\_9 Int)  (a5\_9 Int)  (a6\_9 Int)  (a7\_9 Int)}
+
+{\tt (a1\_10 Int) (a2\_10 Int) (a3\_10 Int) (a4\_10 Int) (a5\_10 Int) (a6\_10 Int) (a7\_10 Int)}
+
+{\tt (C1 Int)    (C2 Int)    (C3 Int)    (C4 Int)    (C5 Int)    (C6 Int)    (C7 Int)}
+
+{\tt (C8 Int)    (C9 Int)    (C10 Int)   (P Int)}
+
+{\tt )}
+
+{\tt :formula}
+
+{\tt (and }
+
+{\tt ;The initial value of each variable is equal to its index}
+
+{\tt (= a1\_0 1)}
+
+{\tt (= a2\_0 2)}
+
+{\tt (= a3\_0 3)}
+
+{\tt (= a4\_0 4)}
+
+{\tt (= a5\_0 5)}
+
+{\tt (= a6\_0 6)}
+
+{\tt (= a7\_0 7)}
+
+{\tt ;Each choice has to be in the range of 1 to N}
+
+{\tt (< 1 C1) (< C1 7)}
+
+{\tt (< 1 C2) (< C2 7)}
+
+{\tt (< 1 C3) (< C3 7)}
+
+{\tt (< 1 C4) (< C4 7)}
+
+{\tt (< 1 C5) (< C5 7)}
+
+{\tt (< 1 C6) (< C6 7)}
+
+{\tt (< 1 C7) (< C7 7)}
+
+{\tt (< 1 C8) (< C8 7)}
+
+{\tt (< 1 C9) (< C9 7)}
+
+{\tt (< 1 C10) (< C10 7)}
+
+{\tt ;If a choice is taken}
+
+{\tt (implies (= C1 2)  (and (= a1\_1 a1\_0) (= a2\_1 (+ a1\_0 a3\_0)) (= a3\_1 a3\_0) (= a4\_1 a4\_0)}
+
+{\tt (= a5\_1 a5\_0) (= a6\_1 a6\_0) (= a7\_1 a7\_0)))}
+
+{\tt (implies (= C1 3)  (and (= a1\_1 a1\_0) (= a2\_1 a2\_0) (= a3\_1 (+ a2\_0 a4\_0)) (= a4\_1 a4\_0)}
+
+{\tt (= a5\_1 a5\_0) (= a6\_1 a6\_0) (= a7\_1 a7\_0)))}
+
+{\tt (implies (= C1 4)  (and (= a1\_1 a1\_0) (= a2\_1 a2\_0) (= a3\_1 a3\_0) (= a4\_1 (+ a3\_0 a5\_0))}
+
+{\tt (= a5\_1 a5\_0) (= a6\_1 a6\_0) (= a7\_1 a7\_0)))}
+
+{\tt (implies (= C1 5)  (and (= a1\_1 a1\_0) (= a2\_1 a2\_0) (= a3\_1 a3\_0) (= a4\_1 a4\_0)}
+
+{\tt  (= a5\_1 (+ a4\_0 a6\_0)) (= a6\_1 a6\_0) (= a7\_1 a7\_0)))}
+
+{\tt (implies (= C1 6)  (and (= a1\_1 a1\_0) (= a2\_1 a2\_0) (= a3\_1 a3\_0) (= a4\_1 a4\_0) }
+
+{\tt (= a5\_1 a5\_0) (= a6\_1 (+ a5\_0 a7\_0)) (= a7\_1 a7\_0)))}
+
+{\tt }
+
+{\tt (implies (= C2 2)  (and (= a1\_2 a1\_1) (= a2\_2 (+ a1\_1 a3\_1)) (= a3\_2 a3\_1) (= a4\_2 a4\_1}
+
+{\tt  (= a5\_2 a5\_1) (= a6\_2 a6\_1) (= a7\_2 a7\_1)))}
+
+{\tt (implies (= C2 3)  (and (= a1\_2 a1\_1) (= a2\_2 a2\_1) (= a3\_2 (+ a2\_1 a4\_1)) (= a4\_2 a4\_1)}
+
+{\tt  (= a5\_2 a5\_1) (= a6\_2 a6\_1) (= a7\_2 a7\_1)))}
+
+{\tt (implies (= C2 4)  (and (= a1\_2 a1\_1) (= a2\_2 a2\_1) (= a3\_2 a3\_1) (= a4\_2 (+ a3\_1 a5\_1))}
+
+{\tt (= a5\_2 a5\_1) (= a6\_2 a6\_1) (= a7\_2 a7\_1)))}
+
+{\tt (implies (= C2 5)  (and (= a1\_2 a1\_1) (= a2\_2 a2\_1) (= a3\_2 a3\_1) (= a4\_2 a4\_1)}
+
+{\tt (= a5\_2 (+ a4\_1 a6\_1)) (= a6\_2 a6\_1) (= a7\_2 a7\_1)))}
+
+{\tt (implies (= C2 6)  (and (= a1\_2 a1\_1) (= a2\_2 a2\_1) (= a3\_2 a3\_1) (= a4\_2 a4\_1)}
+
+{\tt (= a5\_2 a5\_1) (= a6\_2 (+ a5\_1 a7\_1)) (= a7\_2 a7\_1)))}
+
+$\cdots \cdots$
+
+{\tt ;After m number of steps there is a number P >= 50 that occurs at least twice }
+ 
+{\tt  (or  (and (= a1\_10 P) (= a2\_10 P))}
+
+{\tt (and (= a1\_10 P) (= a3\_10 P))}
+
+ {\tt (and (= a1\_10 P) (= a4\_10 P))}
+
+ {\tt (and (= a1\_10 P) (= a5\_10 P))}
+
+ {\tt (and (= a1\_10 P) (= a6\_10 P))}
+
+ {\tt (and (= a1\_10 P) (= a7\_10 P))}
+
+ {\tt (and (= a2\_10 P) (= a3\_10 P))}
+
+ {\tt (and (= a2\_10 P) (= a4\_10 P))}
+
+ {\tt (and (= a2\_10 P) (= a5\_10 P))}
+
+ {\tt (and (= a2\_10 P) (= a6\_10 P))}
+
+ {\tt (and (= a2\_10 P) (= a7\_10 P))}
+
+$\cdots \cdots$
+
+{\tt (>= P 50)}
+
+{\tt )}
+
+\vspace{3mm}
+
+Applying {\tt yices-smt -m part$1\_4$.smt}, it yields the following results:
+
+{\tt (= a1\_0 1)}
+
+{\tt (= a2\_0 2)}
+
+{\tt (= a3\_0 3)}
+
+{\tt (= a4\_0 4)}
+
+{\tt (= a5\_0 5)}
+
+{\tt (= a6\_0 6)}
+
+{\tt (= a7\_0 7)}
+
+$\cdots \cdots$
+
+{\tt (= a1\_10 1)}
+
+{\tt (= a2\_10 4)}
+
+{\tt (= a3\_10 57)}
+
+{\tt (= a4\_10 53)}
+
+{\tt (= a5\_10 50)}
+
+{\tt (= a6\_10 57)}
+
+{\tt (= a7\_10 7)}
+
+{\tt (= C1 4)}
+
+{\tt (= C2 2)}
+
+{\tt (= C3 6)}
+
+{\tt (= C4 5)}
+
+{\tt (= C5 6)}
+
+{\tt (= C6 4)}
+
+{\tt (= C7 5)}
+
+{\tt (= C8 4)}
+
+{\tt (= C9 3)}
+
+{\tt (= C10 6)}
+
+{\tt (= P 57)}
+
+\vspace{3mm}
+
+The final result is shown in next table.
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|}
+  \hline
+  $variables/step$ & 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 \\
+  \hline
+  $C_{k}$ &   & 4 & 2 & 6 & 5 & 6   & 4  & 5  & 4 & 3 & 6 \\
+  $a_{1}$ & 1 & 1 & 1 & 1 & 1 & 1   & 1  & 1  & 1 & 1 & 1 \\
+  $a_{2}$ & 2 & 2 & 4 & 4 & 4 & 4   & 4  & 4  & 4 & 4 & 4 \\
+  $a_{3}$ & 3 & 3 & 3 & 3 & 3 & 3   & 3  & 3  & 3 & 57 & \textbf{57} \\
+  $a_{4}$ & 4 & 8 & 8 & 8 & 8 & 8   & 23 & 23 & 53 & 53 & 53 \\
+  $a_{5}$ & 5 & 5 & 5 & 5 & 20 & 20 & 20 & 50 & 50 & 50 & 50 \\
+  $a_{6}$ & 6 & 6 & 6 & 12 & 12 & 27 & 27 & 27 & 27 & 27 & \textbf{57} \\
+  $a_{7}$ & 7 & 7 & 7 & 7 & 7 & 7 & 7 & 7 & 7 & 7 & 7 \\
+  \hline
+\end{tabular}
+\end{center}
+
+As can be seen, after 10 steps, it is possible to find a number $\geq 50$ that occurs at least twice. For this case this number is 57.
+
+\vspace{3mm}
+
+{\bf Remark:}
+
+\vspace{3mm}
+
+{\bf Generalization:} 
