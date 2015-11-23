@@ -282,10 +282,10 @@ Secondly, we find the clauses which have to be satisfied by  all requirements of
 \begin{description}
   \item[Requirement 1:] The running time of job $i$ is $i$, for $i = 1, 2, . . . , 12$.
 
-  So we have 
-  
-  $D_{1}=1$ , $D_{2}=2$, $D_{3}=3$, $D_{4}=4$, $D_{5}=5$, $D_{6}=6$, 
-  
+  So we have
+
+  $D_{1}=1$ , $D_{2}=2$, $D_{3}=3$, $D_{4}=4$, $D_{5}=5$, $D_{6}=6$,
+
   $D_{7}=7$, $D_{8}=8$, $D_{9}=9$, $D_{10}=10$, $D_{11}=11$ and $D_{12}=12$.
   \item[Requirement 2:] All jobs run without interrupt.
 
@@ -362,31 +362,31 @@ Secondly, we find the clauses which have to be satisfied by  all requirements of
   \item[Requirement 9:] Jobs 5,7 en 10 require a special equipment of which only one copy is available, so no two of these jobs may run at the same time.
 
   There are 6 possible orderings to sort Job 5, Job 7 and Job10. They are
-  
-  Job5$\rightarrow$Job7$\rightarrow$Job10: 
-  
+
+  Job5$\rightarrow$Job7$\rightarrow$Job10:
+
   {\tt (and (>= s5 0) (>= s7 (+ s5 d5)) (>= s10 (+ s5 s7 d5 d7)))}
 
-  Job5$\rightarrow$Job10$\rightarrow$Job7: 
-  
+  Job5$\rightarrow$Job10$\rightarrow$Job7:
+
   {\tt (and (>= s5 0) (>= s10 (+ s5 d5)) (>= s7 (+ s5 s10 d5 d10)))}
 
-  Job7$\rightarrow$Job5$\rightarrow$Job10: 
-  
+  Job7$\rightarrow$Job5$\rightarrow$Job10:
+
   {\tt (and (>= s7 0) (>= s5 (+ s7 d7)) (>= s10 (+ s5 s7 d5 d7)))}
 
-  Job7$\rightarrow$Job10$\rightarrow$Job5: 
-  
+  Job7$\rightarrow$Job10$\rightarrow$Job5:
+
   {\tt (and (>= s7 0) (>= s10 (+ s7 d7)) (>= s5 (+ s10 s7 d10 d7)))}
 
-  Job10$\rightarrow$Job5$\rightarrow$Job7: 
-  
+  Job10$\rightarrow$Job5$\rightarrow$Job7:
+
   {\tt (and (>= s10 0) (>= s5 (+ s10 d10)) (>= s7 (+ s5 s10 d5 d10)))}
 
-  Job10$\rightarrow$Job7$\rightarrow$Job5: 
-  
+  Job10$\rightarrow$Job7$\rightarrow$Job5:
+
   {\tt (and (>= s10 0) (>= s7 (+ s10 d10)) (>= s5 (+ s10 s7 d10 d7)))}
-  
+
   Take the disjunction of the codes for the orderings above and denote the disjunction as Clause G.
 \end{description}
 The total formula now consists of the conjunction of all these requirements.
@@ -492,23 +492,6 @@ We get the scheduling that the total running time is minimal in the screenshot o
 
 \vspace{5mm}
 
-\subsection*{Problem 4}
-
-Seven integer variables $a_{1}$, $a_{2}$, $a_{3}$, $a_{4}$, $a_{5}$, $a_{6}$, $a_{7}$ are given, for which the initial value of $a_{i}$ is $i$ for $i = 1, . . . , 7$. The following steps are defined: choose $i$ with $1 < i < 7$ and execute
-\begin{center}
-$a_{i} := a_{i−1} + a_{i+1}$,\\
-\end{center}
-that is, $a_{i}$ gets the sum of the values of its neighbors and all other values remain unchanged. Show how it is possible that after a number of steps there is a number $\geq 50$ that occurs at least twice in $a_{1}$, $a_{2}$, $a_{3}$, $a_{4}$, $a_{5}$, $a_{6}$, $a_{7}$.
-\vspace{4mm}
-
-\subsection*{Solution:}
-
-\vspace{3mm}
-
-{\bf Remark:}
-
-\vspace{3mm}
-
-{\bf Generalization:}
+\input{Problem4.tex}
 
 \end{document}
