@@ -2,21 +2,21 @@
 
 Seven integer variables $a_{1}$, $a_{2}$, $a_{3}$, $a_{4}$, $a_{5}$, $a_{6}$, $a_{7}$ are given, for which the initial value of $a_{i}$ is $i$ for $i = 1, . . . , 7$. The following steps are defined: choose $i$ with $1 < i < 7$ and execute
 \begin{center}
-$a_{i} := a_{i−1} + a_{i+1}$,\\
+$a_{i} := a_{i - 1} + a_{i+1}$,\\
 \end{center}
 that is, $a_{i}$ gets the sum of the values of its neighbors and all other values remain unchanged. Show how it is possible that after a number of steps there is a number $\geq 50$ that occurs at least twice in $a_{1}$, $a_{2}$, $a_{3}$, $a_{4}$, $a_{5}$, $a_{6}$, $a_{7}$.
 \vspace{4mm}
 
 \subsection*{Solution:}
 
-We generalize this problem by defining $n$ integer variables $a_{1}, a_{2} . . . a_{n}$, with the same initialization pattern, where $a_{i}$ is $i$ for $i = 1, . . . , n$. We also generalize the defined step, where $i$ can be chosen within the range of $1 < i < n$. The part where the selected variable gets the sum of the value of its neighbors stays the same, whereas the restriction is generalized in the form that after $m$ number of steps there is a number $ P \geq 50$ that occurs at least twice in $a_{1}, a_{2}, . . . , a_{n}$.
+We generalize this problem by defining $n$ integer variables $a_{1}, a_{2} . . . a_{n}$, with the same initialization pattern, where $a_{i}$ is $i$ for $i = 1, . . . , n$. We also generalize the defined step, where $i$ can be chosen within the range of $1 < i < n$. The part where the selected variable gets the sum of the value of its neighbors stays the same, whereas the restriction is generalized in the form that after $m$ number of steps there is a number $\geq 50$ that occurs at least twice in $a_{1}, a_{2}, . . . , a_{n}$.
 
-For doing so, we introduce $n\times (m+1)$ integer variables $a_{ij}$ for $i = 1, . . . , n$ and $j = 0, . . . , m$, where $a_{ij}$ represents the variable $a_{i}$ after $j$ number of steps. We also introduce $m$ integer variables $C_k$ for $k = 1, . . . , m$, where $C_k$ is the chosen index $i$ to execute the procedure for step $k$.
+For doing so, we introduce $n\times (m+1)$ integer variables $a_{ij}$ for $i = 1, . . . , n$ and $j = 0, . . . , m$, where $a_{ij}$ represents the variable $a_{i}$ after $j$ number of steps. We also introduce $m$ integer variables $C_k$ for $k = 1, . . . , m$, where $C_k$ is the chosen index $i$ to execute the procedure for step $k$. Finally, we introduce a variable P to represent the number $\geq 50$ that we want to find after performing $m$ steps.
 
 The problem specifies to initialize the values of $a_i$. This is expressed with the introduced variables by the formula
 \[ \bigwedge_{i=1}^n (a_{i0} = i).\]
 
-Also we have to specified the boundaries of the chosen variable, so it has to be selected within the range of $1 < i < n$. This can be expressed by the formula
+Also we have to specified the boundaries of the chosen variable, so it has to be selected within the range of $1 < i < n$ in every step. This can be expressed by the formula
 \[ \bigwedge_{k=1}^m 1<C_k<n.\]
 
 Next we express the step that after selecting a variable, it gets the sum of the values of its neighbors and all other values remain unchanged. For clarity, we split this into two conditions. One to express that the remaining variables remain with the same value, and the other to execute the sum of the neighbors. The first one can easily be expressed with the introduced variables by specifying that if $C_k$ is equal to $l$, then the values for $a_{ik}$ with $i$ different to $l$ will be the same as the values of the previous step $a_{i(k-1)}$. This is expressed with the formula
@@ -167,7 +167,7 @@ This formula can be expressed in SMT syntax, for instance, for $n=7$ and $m=10$ 
 $\cdots \cdots$
 
 {\tt ;After m number of steps there is a number P >= 50 that occurs at least twice }
- 
+
 {\tt  (or  (and (= a1\_10 P) (= a2\_10 P))}
 
 {\tt (and (= a1\_10 P) (= a3\_10 P))}
@@ -279,6 +279,13 @@ As can be seen, after 10 steps, it is possible to find a number $\geq 50$ that o
 
 {\bf Remark:}
 
+Although the method presented here successfully solves the problem, it is not very practical for large number of steps. The reason is that for every extra step that we want to analyze, it is necessary to add $n+1$ extra variables to the yices code, with its respective conditions, resulting in a significant increment of code. Additionally, since the steps have to be explicitly added, if for some reason such number of steps $m$ does not exist (e.g. choosing n = 3), then no matter how many steps we added to the code, we will never get a satisfied condition. 
+
 \vspace{3mm}
 
 {\bf Generalization:} 
+
+We solved this problem choosing the number of variables $n = 7$, but it would be interesting to know the results for other values of $n$.  For $n>7$ it is easy to see that the formula is still satisfiable after 10 steps, since we can choose the same $C_{k}$ variables as for $n=7$ and the result will be the same.
+For $n = 3$ the resulting formula is unsatisfiable no matter how many number of steps we choose, this can be easily seen because we only can choose the variable $a_{2}$ to execute the steps for this specific case.
+
+For $n=4$ the formula again is always unsatisfiable. We can see this by observing the facts that we only can choose $a_{2}$ and $a_{3}$ to execute the steps, and that it will always be the case that $a_{2} = 1 + a_{3}$ or $a_{3} = 4 + a{2}$, so they will never be equal. For $n=5$ and $n=6$, and considering the number of steps $m=10$, the formula is unsatisfiable. 
