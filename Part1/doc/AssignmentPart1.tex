@@ -337,71 +337,43 @@ See below.
 Thus, we plan to put the components onto the plan in terms of the constraints.
 
 \begin{description}
-  \item[Constraint 1:] Now the chip is a positive plane, so all the coordinates should be positive.
+  \item[Constraint 1:] Now the chip is a positive plane, so all the coordinates should be positive. The width of the chip is 29 and the height is 22.
 
   Then we have
-  \[  \bigwedge_{i=1}^3 x_{i2} \geq x_{i1} \geq 0 \wedge y_{i2} \geq y_{i1} \geq 0 \;\; \wedge \]
-  \[  \bigwedge_{i=1}^8 n_{i2} \geq n_{i1} \geq 0 \wedge m_{i2} \geq m_{i1} \geq 0 \]
-  \item[Constraint 2:] The width of the chip is 29 and the height is 22. All power components have width 4 and height 2,
+  \[  \bigwedge_{i=1}^3 29 \geq x_{i2} \geq x_{i1} \geq 0 \wedge 22 \geq y_{i2} \geq y_{i1} \geq 0 \;\; \wedge \]
+  \[  \bigwedge_{i=1}^8 29 \geq n_{i2} \geq n_{i1} \geq 0 \wedge 22 \geq m_{i2} \geq m_{i1} \geq 0 \]
+  \item[Constraint 2:] All power components have width 4 and height 2,
   and the sizes of the eight regular components are $9 \times 7$, $12 \times 6$, $10 \times 7$, $18 \times 5$, $20 \times 4$, $10 \times 6$, $8 \times 6$ and $10 \times 8$, respectively.
   All components may be turned 90.
 
   Then we have
-  \[  \bigwedge_{i=1}^3 (x_{i2} \leq 29 \; \wedge \; y_{i2} \leq 22) \rightarrow (x_{i2} - x_{i1} = 4 \; \wedge \; y_{i2} - y_{i1} = 2) \;\; \vee \]
-  \[ (y_{i2} \leq 29 \; \wedge \; x_{i2} \leq 22) \rightarrow (x_{i2} - x_{i1} = 2 \; \wedge \; y_{i2} - y_{i1} = 4) \]
+  \[  \bigwedge_{i=1}^3 ((x_{i2} - x_{i1} = 4 \; \wedge \; y_{i2} - y_{i1} = 2) \;\; \vee \]
+  \[ (x_{i2} - x_{i1} = 2 \; \wedge \; y_{i2} - y_{i1} = 4)) \]
   So do the coordinates for the Regular components. However their sizes are distinct,
   this makes the more writing and coding. Here we show the clause for the first regular component,
   whose size is $9 \times 7$. \\
-  \[ ((n_{12} \leq 29 \; \wedge \; m_{12} \leq 22) \rightarrow (n_{12} - n_{11} = 9 \; \wedge \; m_{12} - m_{11} = 7)) \;\; \vee \]
-  \[ ((m_{12} \leq 29 \; \wedge \; n_{12} \leq 22) \rightarrow (n_{12} - n_{11} = 7 \; \wedge \; m_{12} - m_{11} = 9)) \]
+  \[ (n_{12} - n_{11} = 9 \; \wedge \; m_{12} - m_{11} = 7) \;\; \vee (n_{12} - n_{11} = 7 \; \wedge \; m_{12} - m_{11} = 9) \]
   \item[Constraint 3:] All components may not overlap.
 
 \begin{center}
 \includegraphics[width=0.5\textwidth]{Part1_2_1.png}
 \end{center}
-
-  As the figure above shows, if two components are overlapped, then there is at least one corner of one of the components is inside the other's area.
-  We denote this condition with the coordinates as follows.
+  As the figure shows, only if a component's $x_{i1}$ is larger than the other one's $x_{k2}$, then these two components are not overlapped. We also have the case in the y direction.
 
   Among the power components:
 
   \[  \bigwedge_{i,k: 1 \leq i \leq 3, 1 \leq k \leq 3, i \neq k}
-  [ (y_{i1} \leq y_{k2} \leq y_{i2} \; \vee \; y_{i1} \leq y_{k1} \geq y_{i2}) \; \wedge \; \]
-  \[ (x_{i1} \leq x_{k2} \leq x_{i2} \; \vee \; x_{i1} \leq x_{k1} \geq x_{i2}) ]  \]
+  x_{i2} \leq x_{k1} \; \vee \; x_{i2} \leq x_{k1} \; \vee \; y_{i2} \leq y_{k1} \; \vee \; y_{i2} \leq y_{k1} \]
 
   Among the regular components:
 
   \[  \bigwedge_{i,k: 1 \leq i \leq 8, 1 \leq k \leq 8, i \neq k}
-  [ (m_{i1} \leq m_{k2} \leq m_{i2} \; \vee \; m_{i1} \leq m_{k1} \geq m_{i2}) \; \wedge \; \]
-  \[ (n_{i1} \leq n_{k2} \leq n_{i2} \; \vee \; n_{i1} \leq n_{k1} \geq n_{i2}) ] \]
+  n_{i2} \leq n_{k1} \; \vee \; n_{i2} \leq n_{k1} \; \vee \; m_{i2} \leq m_{k1} \; \vee \; m_{i2} \leq m_{k1}  \]
 
   Between the power components and the regular components:
 
   \[  \bigwedge_{i,k: 1 \leq i \leq 3, 1 \leq k \leq 8, i \neq k}
-  [ (y_{i1} \leq m_{k2} \leq y_{i2} \; \vee \; y_{i1} \leq m_{k1} \geq y_{i2}) \; \wedge \; \]
-  \[ (x_{i1} \leq n_{k2} \leq x_{i2} \; \vee \; x_{i1} \leq n_{k1} \geq x_{i2}) ] \]
-
-  Moreover, we have to make sure that one component will not completely contain another smaller one.
-  So for those components with same widths or heights, we made the following clauses.
-
-  For the regular components, we have
-  \[  \bigwedge_{i,k: 1 \leq i \leq 8, 1 \leq k \leq 8, i \neq k}
-  \urcorner (n_{i1} = n_{k1} \; \wedge \; n_{i2} = n_{k2}) \; \vee \; m_{j1} \geq m_{k2} \; \vee \; m_{j2} \leq m_{k1} \]
-
-  Since the components may be turned 90. We have to add
-  \[  \bigwedge_{i,k: 1 \leq i \leq 3, 1 \leq k \leq 3, i \neq k}
-  \urcorner (m_{i1} = m_{k1} \; \wedge \; m_{i2} = m_{k2}) \; \vee \; n_{j1} \geq n_{k2} \; \vee \; n_{j2} \leq n_{k1} \]
-
-  Also, the power components have the same sizes, we give the clause as the following.
-
-  \[  \bigwedge_{i,k: 1 \leq i \leq 3, 1 \leq k \leq 3, i \neq k} \urcorner (x_{i1} = x_{k1} \; \wedge \; y_{i2} = y_{k2}) \]
-
-  Besides, we also find the regular component, whose size is $20 \times 4$, is likely to completely cover the power components, whose size are $4 \times 2$.
-  So more clauses are made to avoid the overlapping, which are similar to the case for the regular components.
-
-  \[  \bigwedge_{i,k: 1 \leq i \leq 3, 1 \leq k \leq 8}
-  [ (y_{i1} \leq m_{k2} \leq y_{i2} \; \vee \; y_{i1} \leq m_{k1} \geq y_{i2}) \; \wedge \; \]
-  \[ (x_{i1} \leq n_{k2} \leq x_{i2} \; \vee \; x_{i1} \leq n_{k1} \geq x_{i2}) ] \]
+   x_{i2} \leq n_{k1} \; \vee \; n_{i2} \leq x_{k1} \; \vee \; y_{i2} \leq m_{k1} \; \vee \; m_{i2} \leq y_{k1} \]
 
   \item[Constraint 4:] An edge of the regular component should have at least one point in common with an edge of the power component.
 
@@ -409,12 +381,12 @@ Thus, we plan to put the components onto the plan in terms of the constraints.
 \includegraphics[width=0.5\textwidth]{Part1_2_2.png}
 \end{center}
 
-  As the figure above shows, if two components are touched at least one point, then there is at least one coordinate of each two components is the same.
+  As the figure above shows, if two components are touched at least one point, then there is at least one coordinate of each two components is the same. We consider it from the inverse way to make the clauses simpler. If two components have the same $x_{i1}$ value, only if their $y$-direction sides are not touched, then these two components are not in common with an edge of each other.
   We denote this condition as follows.
 
   \[  \bigwedge_{i,k: 1 \leq i \leq 3, 1 \leq k \leq 8}
   (x_{i2} = n_{k1} \; \vee \; x_{i1} = n_{k2}) \; \wedge \;
-  (y_{i2} \geq m_{k1} \geq y_{i1} \; \vee \; y_{i2} \geq m_{k2} \geq y_{i1}) \]
+  \neg (y_{i2} < m_{k1} \vee y_{i1} < m_{k2}) \]
   \item[Constraint 5:] The power components' centres should differ at least 17 in either the $x$ direction or the $y$ direction (or both).
 
   The centers of the power components are $(x_{i1} + \frac{x_{i2} - x_{i1}}{2}, y_{i1} + \frac{y_{i2} - y_{i1}}{2} )$.
@@ -460,19 +432,19 @@ $\cdots \cdots$
 
 {\tt :formula (and}
 
-{\tt (>= x12 x11) (>= x11 0) (>= y12 y11) (>= y11 0)}
+{\tt (>= 29 x12) (>= x12 x11) (>= x11 0) (>= 22 y12) (>= y12 y11) (>= y11 0)}
 
-{\tt (>= x22 x21) (>= x21 0) (>= y22 y21) (>= y21 0)}
+{\tt (>= 29 x22) (>= x22 x21) (>= x21 0) (>= 22 y22) (>= y22 y21) (>= y21 0)}
 
-{\tt (>= x32 x31) (>= x31 0) (>= y32 y31) (>= y31 0)}
+{\tt (>= 29 x32) (>= x32 x31) (>= x31 0) (>= 22 y32) (>= y32 y31) (>= y31 0)}
 
-{\tt (>= n12 n11) (>= n11 0) (>= m12 m11) (>= m11 0)}
+{\tt (>= 29 n12) (>= n12 n11) (>= n11 0) (>= 22 m12) (>= m12 m11) (>= m11 0)}
 
-{\tt (>= n22 n21) (>= n21 0) (>= m22 m21) (>= m21 0)}
+{\tt (>= 29 n22) (>= n22 n21) (>= n21 0) (>= 22 m22) (>= m22 m21) (>= m21 0)}
 
 $\cdots \cdots$
 
-{\tt (>= n82 n81) (>= n81 0) (>= m82 m81) (>= m81 0)}
+{\tt (>= 29 n82) (>= n82 n81) (>= n81 0) (>= 22 m82) (>= m82 m81) (>= m81 0)}
 
 {\tt (or (and (>= 29 x12) (>= 22 y12) (= (- x12 x11) 4) (= (- y12 y11) 2))}
 
@@ -480,21 +452,15 @@ $\cdots \cdots$
 
 $\cdots \cdots$
 
-{\tt (or (and (>= 29 x32) (>= 22 y32) (= (- x32 x31) 4) (= (- y32 y31) 2))}
+{\tt (or (and (= (- x32 x31) 4) (= (- y32 y31) 2)) (and (= (- x32 x31) 2) (= (- y32 y31) 4)))}
 
-{\tt (and (>= 22 x32) (>= 29 y32) (= (- x32 x31) 2) (= (- y32 y31) 4)))}
-
-{\tt (or (and (>= 29 n12) (>= 22 m12) (= (- n12 n11) 9) (= (- m12 m11) 7))}
-
-{\tt (and (>= 22 n12) (>= 29 m12) (= (- n12 n11) 7) (= (- m12 m11) 9)))}
+{\tt (or (and (= (- n12 n11) 9) (= (- m12 m11) 7)) (and (= (- n12 n11) 7) (= (- m12 m11) 9)))}
 
 $\cdots \cdots$
 
-{\tt (or (and (>= 29 n82) (>= 22 m82) (= (- n82 n81) 10) (= (- m82 m81) 8))}
+{\tt (or (and (= (- n82 n81) 10) (= (- m82 m81) 8)) (and (= (- n82 n81) 8) (= (- m82 m81) 10)))}
 
-{\tt (and (>= 22 n82) (>= 29 m82) (= (- n82 n81) 8) (= (- m82 m81) 10)))}
-
-{\tt ;;overlap among power components}
+{\tt ;; not overlap among power components}
 
 {\tt (not(or}
 
@@ -514,67 +480,37 @@ $\cdots \cdots$
 
 {\tt (not (and (= y11 y31) (= x11 x31)))}
 
-{\tt ;;overlap among regular components}
+{\tt ;; not overlap among regular components}
 
-{\tt (not(or}
+{\tt (or (<= n12 n21) (<= n22 n11) (<= m12 m21) (<= m22 m11))}
 
-{\tt (and (or (and (< m11 m22) (< m22 m12)) (and (< m11 m21) (< m21 m12)))}
-
-{\tt (or (and (< n11 n22) (< n22 n12)) (and (< n11 n21) (< n21 n12))))}
+{\tt (or (<= n12 n31) (<= n32 n11) (<= m12 m31) (<= m32 m11))}
 
 $\cdots \cdots$
 
-{\tt (and (or (and (< m71 m82) (< m82 m72)) (and (< m71 m81)}
+{\tt (or (<= n72 n81) (<= n82 n71) (<= m72 m81) (<= m82 m71))}
 
-{\tt (< m81 m72))) (or (and (< n71 n82) (< n82 n72)) (and (< n71 n81) (< n81 n72))))}
+{\tt ;;not overlap between power components and regular ones}
 
-{\tt ))}
+{\tt (or (<= x12 n11) (<= n12 x11) (<= y12 m11) (<= m12 y11))}
 
-{\tt ;;avoid the completely covering cases}
-
-{\tt (or (not (and (= n11 n41) (= n12 n42))) (>= m11 m42) (<= m12 m41))}
+{\tt (or (<= x12 n21) (<= n22 x11) (<= y12 m21) (<= m22 y11))}
 
 $\cdots \cdots$
 
-{\tt (or (not (and (= m61 m71) (= m22 m72))) (>= n21 n72) (<= n22 n71))}
-
-{\tt ;;overlap between power components and regular ones}
-
-{\tt (not (and (or (and (< y11 m12) (< m12 y12)) (and (< y11 m11) (< m11 y12)))}
-
-{\tt (or (and (< x11 n12) (< n12 x12)) (and (< x11 n11) (< n11 x12)))))}
-
-$\cdots \cdots$
-
-{\tt ;;overlap between power components and regular ones}
-
-{\tt (not (and (or (and (< y11 m12) (< m12 y12)) (and (< y11 m11) (< m11 y12)))}
-
-{\tt (or (and (< x11 n12) (< n12 x12)) (and (< x11 n11) (< n11 x12)))))
-
-$\cdots \cdots$
-
-{\tt (not (and (or (and (< y31 m82) (< m82 y32)) (and (< y31 m81)}
-
-{\tt (< m81 y32))) (or (and (< x31 n82) (< n82 x32)) (and (< x31 n81) (< n81 x32)))))}
-
-{\tt ;;avoid the completely covering cases}
-
-{\tt (or (not (and (= x11 n51) (= x12 n52))) (>= y11 m52) (<= y12 m51))}
-
-$\cdots \cdots$
-
-{\tt (or (not (and (= y31 m51) (= y32 m52))) (>= x31 n52) (<= x32 n51))}
+{\tt (or (<= x32 n81) (<= n82 x31) (<= y32 m81) (<= m82 y31))}
 
 {\tt ;;Constraint 4}
 
 {\tt (or}
 
-{\tt (and (= x12 n11) (or (and (>= y12 m11) (>= m11 y11)) (and (>= y12 m12) (>= m12 y11))))}
+{\tt (and (or (= x11 n12) (= x12 n11)) (not (or (< y12 m11) (> y11 m12))))}
+
+{\tt (and (or (= x21 n12) (= x22 n11)) (not (or (< y22 m11) (> y21 m12))))}
 
 $\cdots \cdots$
 
-{\tt (and (= y32 m11) (or (and (>= x32 n11) (>= n11 x31)) (and (>= x32 n12) (>= n12 x31))))}
+{\tt (and (or (= y31 m12) (= y32 m11)) (not (or (< x32 n11) (> x31 n12))))}
 
 {\tt )}
 
@@ -582,11 +518,13 @@ $\cdots \cdots$
 
 {\tt (or}
 
-{\tt (and (= x12 n81) (or (and (>= y12 m81) (>= m81 y11)) (and (>= y12 m82) (>= m82 y11))))}
+{\tt (and (or (= x11 n82) (= x12 n81)) (not (or (< y12 m81) (> y11 m82))))}
+
+{\tt (and (or (= x21 n82) (= x22 n81)) (not (or (< y22 m81) (> y21 m82))))}
 
 $\cdots \cdots$
 
-{\tt (and (= y32 m81) (or (and (>= x32 n81) (>= n81 x31)) (and (>= x32 n82) (>= n82 x31))))}
+{\tt (and (or (= y31 m82) (= y32 m81)) (not (or (< x32 n81) (> x31 n82))))}
 
 {\tt )}
 
@@ -619,96 +557,99 @@ Applying {\tt yices-smt -m part$1\_2$.smt}, we test out a satisfiable chip desig
 
 {\tt sat}
 
-{\tt(= x11 24)}
+{\tt(= x11 9)}
 
-{\tt(= x12 28)}
+{\tt(= x12 11)}
 
-{\tt(= y11 9)}
+{\tt(= y11 1)}
 
-{\tt(= y12 11)}
+{\tt(= y12 5)}
 
 {\tt(= x21 7)}
 
 {\tt(= x22 9)}
 
-{\tt(= y21 25)}
+{\tt(= y21 18)}
 
-{\tt(= y22 29)}
+{\tt(= y22 22)}
 
-{\tt(= x31 7)}
+{\tt(= x31 27)}
 
-{\tt(= x32 11)}
+{\tt(= x32 29)}
 
 {\tt(= y31 7)}
 
-{\tt(= y32 9)}
+{\tt(= y32 11)}
 
-{\tt(= n11 11)}
+{\tt(= n11 0)}
 
-{\tt(= n12 18)}
+{\tt(= n12 7)}
 
-{\tt(= m11 0)}
+{\tt(= m11 11)}
 
-{\tt(= m12 9)}
+{\tt(= m12 20)}
 
-{\tt(= n21 1)}
+{\tt(= n21 17)}
 
-{\tt(= n22 7)}
+{\tt(= n22 29)}
 
-{\tt(= m21 17)}
+{\tt(= m21 11)}
 
-{\tt(= m22 29)}
+{\tt(= m22 17)}
 
 {\tt(= n31 11)}
 
-{\tt(= n32 16)}
+{\tt(= n32 29)}
 
-{\tt(= m31 9)}
+{\tt(= m31 0)}
 
-{\tt(= m32 27)}
+{\tt(= m32 5)}
 
-{\tt(= n41 0)}
+{\tt(= n41 7)}
 
-{\tt(= n42 7)}
+{\tt(= n42 17)}
 
-{\tt(= m41 17)}
+{\tt(= m41 11)}
 
-{\tt(= m42 27)}
+{\tt(= m42 18)}
 
-{\tt(= n51 11)}
+{\tt(= n51 9)}
 
-{\tt(= n52 15)}
+{\tt(= n52 29)}
 
-{\tt(= m51 9)}
+{\tt(= m51 18)}
 
-{\tt(= m52 29)}
+{\tt(= m52 22)}
 
-{\tt(= n61 1)}
+{\tt(= n61 9)}
 
-{\tt(= n62 7)}
+{\tt(= n62 19)}
 
-{\tt(= m61 7)}
+{\tt(= m61 5)}
 
-{\tt(= m62 17)}
+{\tt(= m62 11)}
 
-{\tt(= n71 0)}
+{\tt(= n71 19)}
 
-{\tt(= n72 8)}
+{\tt(= n72 27)}
 
-{\tt(= m71 1)}
+{\tt(= m71 5)}
 
-{\tt(= m72 7)}
+{\tt(= m72 11)}
 
-{\tt(= n81 11)}
+{\tt(= n81 1)}
 
-{\tt(= n82 21)}
+{\tt(= n82 9)}
 
-{\tt(= m81 7)}
+{\tt(= m81 0)}
 
-{\tt(= m82 15)}
+{\tt(= m82 10)}
 
 }
 
+\begin{center}
+\includegraphics[width=0.8\textwidth]{Part1_2_3.png}
+\end{center}
 
 \vspace{3mm}
 
