@@ -9,7 +9,7 @@
  (C1 Int) (C2 Int) (C3 Int) (C4 Int) (C5 Int) (C6 Int)
  (D1 Int) (D2 Int) (D3 Int) (D4 Int) (D5 Int) (D6 Int)
  (Total_P Int)
-) s
+)
 :formula 
 (and
  ;Avoid negative values
@@ -18,6 +18,9 @@
  (>= S1 0) (>= S2 0) (>= S3 0) (>= S4 0) (>= S5 0) (>= S6 0)
  (>= C1 0) (>= C2 0) (>= C3 0) (>= C4 0) (>= C5 0) (>= C6 0)
  (>= D1 0) (>= D2 0) (>= D3 0) (>= D4 0) (>= D5 0) (>= D6 0)
+ 
+ ;Every truck should have at most 8 pallets
+ 
  
  ;Define the total number of elements
  (= (+ N1 N2 N3 N4 N5 N6) 4)

@@ -7,7 +7,7 @@
  (S7 Int) (S8 Int) (S9 Int) (S10 Int) (S11 Int) (S12 Int)
  (F1 Int) (F2 Int) (F3 Int) (F4 Int)  (F5 Int)  (F6 Int)
  (F7 Int) (F8 Int) (F9 Int) (F10 Int) (F11 Int) (F12 Int)
- (Sum Int)
+ (T Int)
 )
 :formula 
 (and
@@ -38,18 +38,27 @@
  (>= S12 F9) (>= S12 F11)
  
  ;Jobs 5,7 and 10 connot execute in parallel
- (or (not (<= S5 S7))  (not (< S7 F5)))
- (or (not (<= S5 S10)) (not (< S10 F5)))
- (or (not (<= S7 S5))  (not (< S5 F7)))
- (or (not (<= S7 S10)) (not (< S10 F7)))
- (or (not (<= S10 S5)) (not (< S5 F10)))
- (or (not (<= S10 S7)) (not (< S7 F10)))
- 
- ;Sum of starting times
- ;(= (+ S1 S2 S3 S4 S5 S6 S7 S8 S9 S10 S11 S12) Sum)
+ (implies (<= S5 S7)   (<= F5 S7))
+ (implies (<= S5 S10)  (<= F5 S10))
+ (implies (<= S7 S5)   (<= F7 S5))
+ (implies (<= S7 S10)  (<= F7 S10))
+ (implies (<= S10 S5)  (<= F10 S5))
+ (implies (<= S10 S7)  (<= F10 S7))
 
- (= F12 36)
- ;(= Sum 76)
+ (<= F12 T)
+ (<= F11 T)
+ (<= F10 T)
+ (<= F9 T)
+ (<= F8 T)
+ (<= F7 T)
+ (<= F6 T)
+ (<= F5 T)
+ (<= F4 T)
+ (<= F3 T)
+ (<= F2 T)
+ (<= F1 T)
+ 
+ (= T 33)
 ))
 
 

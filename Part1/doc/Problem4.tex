@@ -1,4 +1,4 @@
-\subsection*{Problem 4}
+\section*{Problem 4}
 
 Seven integer variables $a_{1}$, $a_{2}$, $a_{3}$, $a_{4}$, $a_{5}$, $a_{6}$, $a_{7}$ are given, for which the initial value of $a_{i}$ is $i$ for $i = 1, . . . , 7$. The following steps are defined: choose $i$ with $1 < i < 7$ and execute
 \begin{center}
@@ -195,10 +195,13 @@ $\cdots \cdots$
 {\tt (>= P 50)}
 
 {\tt )}
+}
 
 \vspace{3mm}
 
 Applying {\tt yices-smt -m part$1\_4$.smt}, it yields the following results:
+
+{\footnotesize
 
 {\tt (= a1\_0 1)}
 
@@ -252,6 +255,8 @@ $\cdots \cdots$
 
 {\tt (= P 57)}
 
+}
+
 \vspace{3mm}
 
 The final result is shown in next table.
@@ -275,15 +280,11 @@ The final result is shown in next table.
 
 As can be seen, after 10 steps, it is possible to find a number $\geq 50$ that occurs at least twice. For this case this number is 57.
 
-\vspace{3mm}
+\subsection*{Remark:}
 
-{\bf Remark:}
+Although the method presented here successfully solves the problem, it is not very practical for large number of steps. The reason is that for every extra step that we want to analyze, it is necessary to add $n+1$ extra variables to the yices code, with its respective conditions, resulting in a significant increment of code. Additionally, since the steps have to be explicitly added, if for some reason such number of steps $m$ does not exist (e.g. choosing n = 3), then no matter how many steps we added to the code, we will never get a satisfied condition.
 
-Although the method presented here successfully solves the problem, it is not very practical for large number of steps. The reason is that for every extra step that we want to analyze, it is necessary to add $n+1$ extra variables to the yices code, with its respective conditions, resulting in a significant increment of code. Additionally, since the steps have to be explicitly added, if for some reason such number of steps $m$ does not exist (e.g. choosing n = 3), then no matter how many steps we added to the code, we will never get a satisfied condition. 
-
-\vspace{3mm}
-
-{\bf Generalization:} 
+\subsection*{Generalization:}
 
 We solved this problem choosing the number of variables $n = 7$, but it would be interesting to know the results for other values of $n$.  For $n>7$ it is easy to see that the formula is still satisfiable after 10 steps, since we can choose the same $C_{k}$ variables as for $n=7$ and the result will be the same.
 For $n = 3$ the resulting formula is unsatisfiable no matter how many number of steps we choose, this can be easily seen because we only can choose the variable $a_{2}$ to execute the steps for this specific case.
