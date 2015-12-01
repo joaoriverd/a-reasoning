@@ -49,7 +49,7 @@ Investigate what is the maximum number of pallets of prittles that can be delive
 
 We introduce some variables into the problem so that the $i$-th truck delivers pallets of obscure building blocks labeled $j$, $1\leq i \leq6$ and $1\leq j \leq5$.
 
-Then we introduce $t_{ij}$ as a nature number, which represents the number of pallets of obscure building block $j$ on truck Nr. $i$.
+Then we introduce $t_{ij}$ as a nature number, which represents the number of pallets of obscure building block $j$ on the $i$-th truck.
 \begin{center}
 \begin{tabular}{|c|c|c|c|c|c|}
   \hline
@@ -75,18 +75,18 @@ Now we consider the conditions for the delivery.
   \item[Condition 3:] Every truck can carry at most eight pallets.
 
   \[ \bigwedge_{i=1}^6 (\sum_{j=1}^5 t_{ij}) \leq 8 .\]
-  \item[Condition 4:] Except for prittles, the total numbers of the pallets of the other obscure building blocks should be exact the same as the given number.
+  \item[Condition 4:] The total numbers of the pallets of the other obscure building blocks should be exact the same as the given number.
 
-  \[ \bigwedge_{1\leq j \leq5, j\neq2} (\sum_{i=1}^6 t_{ij}) = \sharp pallets(j) .\]
+  \[ \bigwedge_{1\leq j \leq5} (\sum_{i=1}^6 t_{ij}) = \sharp pallets(j) .\]
 
   \item[Condition 5:] Prittles and crottles are not allowed to be put in the same truck.
 
   \[ \bigwedge_{i=1}^6 t_{i2}=0 \vee t_{i4}=0 .\]
   \item[Condition 6:] Only two of the six trucks can deliver skipples.
 
-      So we randomly choose two of the six trucks to deliver skipples.
+      So let's assume the fourth and sixth trucks can deliver skipples.
 
-  \[ \bigvee_{i,k:1 \leq i < k \leq 6} t_{i3} + t_{k3} = 8 .\]
+  \[ t_{43} + t_{63} = 8 .\]
   \item[Condition 7:] No two pallets of dupples may be in the same truck.
 
   \[ \bigwedge_{i=1}^6 t_{i5} \leq 1 .\]
@@ -100,7 +100,7 @@ ingredients, that is,
 \[ \bigwedge_{1\leq j \leq5, j\neq2} (\sum_{i=1}^6 t_{ij}) = \sharp pallets(j) \;\; \wedge \]
 \[ (\sum_{i=1}^6 t_{i2}) \leq 25 \;\; \wedge \]
 \[ \bigwedge_{i=1}^6 t_{i2}=0 \vee t_{i4}=0 \;\; \wedge \]
-\[ \bigvee_{i,k:1 \leq i < k \leq 6} t_{i3} + t_{k3} = 8 \;\; \wedge \]
+\[ t_{43} + t_{63} = 8 \;\; \wedge \]
 \[ \bigwedge_{i=1}^6 t_{i5} \leq 1 \]
 
 This formula is easily expressed in SMT syntax.
@@ -187,13 +187,7 @@ $\cdots \cdots$
 
 {\tt (or}
 
-{\tt (= (+ t13 t23) 8) (= (+ t13 t33) 8) (= (+ t13 t43) 8) (= (+ t13 t53) 8) }
-
-{\tt (= (+ t13 t63) 8) (= (+ t23 t33) 8) (= (+ t23 t43) 8) (= (+ t23 t53) 8) }
-
-{\tt (= (+ t23 t63) 8) (= (+ t33 t43) 8) (= (+ t33 t53) 8) (= (+ t33 t63) 8) }
-
-{\tt (= (+ t43 t53) 8) (= (+ t43 t63) 8) (= (+ t53 t63) 8)) }
+{\tt (= (+ t43 t63) 8) }
 
 {\tt (<= t15 1) (<= t25 1) (<= t35 1) (<= t45 1) (<= t55 1) (<= t65 1)}
 
@@ -207,7 +201,7 @@ The following result is yielded within a fraction of a second:
 
 {\tt sat}
 
-{\tt (= t52 0)}
+{\tt (= t52 7)}
 
 {\tt (= t11 0)}
 
@@ -215,21 +209,21 @@ The following result is yielded within a fraction of a second:
 
 {\tt (= t34 0)}
 
-{\tt (= t21 0)}
+{\tt (= t21 4)}
 
 {\tt (= t15 1)}
 
-{\tt (= t44 0)}
+{\tt (= t44 2)}
 
-{\tt (= t45 0)}
+{\tt (= t45 1)}
 
-{\tt (= t54 3)}
+{\tt (= t54 0)}
 
 {\tt (= t33 0)}
 
-{\tt (= t35 1)}
+{\tt (= t35 0)}
 
-{\tt (= t51 4)}
+{\tt (= t51 0)}
 
 {\tt (= t23 0)}
 
@@ -243,7 +237,7 @@ The following result is yielded within a fraction of a second:
 
 {\tt (= t25 1)}
 
-{\tt (= t32 7)}
+{\tt (= t32 8)}
 
 {\tt (= t41 0)}
 
@@ -251,17 +245,17 @@ The following result is yielded within a fraction of a second:
 
 {\tt (= t43 4)}
 
-{\tt (= t42 4)}
+{\tt (= t42 0)}
 
 {\tt (= t12 0)}
 
-{\tt (= t64 2)}
+{\tt (= t64 0)}
 
 {\tt (= t55 1)}
 
-{\tt (= t22 7)}
+{\tt (= t22 0)}
 
-{\tt (= t24 0)}
+{\tt (= t24 3)}
 
 {\tt (= t61 0)}
 
@@ -276,11 +270,11 @@ The following result is yielded within a fraction of a second:
     % after \\: \hline or \cline{col1-col2} \cline{col3-col4} ...
      & nuzzles & prittles & skipples & crottles & dupples \\
     Truck 1 & 0 & 0 & 0 & 5 & 1 \\
-    Truck 2 & 0 & 7 & 0 & 0 & 1 \\
-    Truck 3 & 0 & 7 & 0 & 0 & 1 \\
-    Truck 4 & 0 & 4 & 4 & 0 & 0 \\
-    Truck 5 & 4 & 0 & 0 & 3 & 1 \\
-    Truck 6 & 0 & 0 & 4 & 2 & 1 \\
+    Truck 2 & 4 & 0 & 0 & 3 & 1 \\
+    Truck 3 & 0 & 8 & 0 & 0 & 1 \\
+    Truck 4 & 0 & 0 & 4 & 2 & 1 \\
+    Truck 5 & 0 & 7 & 0 & 0 & 1 \\
+    Truck 6 & 0 & 3 & 4 & 0 & 1 \\
     \hline
   \end{tabular}
 \end{table}
@@ -376,8 +370,10 @@ Thus, we plan to put the components onto the plan in terms of the constraints.
   We denote this condition as follows.
 
   \[  \bigwedge_{i,k: 1 \leq i \leq 3, 1 \leq k \leq 8}
-  (x_{i2} = n_{k1} \; \vee \; x_{i1} = n_{k2}) \; \wedge \;
-  \neg (y_{i2} < m_{k1} \vee y_{i1} < m_{k2}) \]
+  ((x_{i2} = n_{k1} \; \vee \; x_{i1} = n_{k2}) \; \wedge \;
+  \neg (y_{i2} < m_{k1} \vee m_{k2} < y_{i1}) \; \vee \; \]
+  \[  ((y_{i2} = m_{k1} \; \vee \; y_{i1} = m_{k2}) \; \wedge \;
+  \neg (x_{i2} < n_{k1} \vee n_{k2} < x_{i1}))) \]
   \item[Constraint 5:] The power components' centres should differ at least 17 in either the $x$ direction or the $y$ direction (or both).
 
   The centers of the power components are $(x_{i1} + \frac{x_{i2} - x_{i1}}{2}, y_{i1} + \frac{y_{i2} - y_{i1}}{2} )$.
@@ -453,23 +449,11 @@ $\cdots \cdots$
 
 {\tt ;; not overlap among power components}
 
-{\tt (not(or}
+{\tt (or (<= x12 x21) (<= x22 x11) (<= y12 y21) (<= y22 y11))}
 
-{\tt (and (or (and (< y11 y22) (< y22 y12)) (and (< y11 y21) (< y21 y12)))}
+{\tt (or (<= x12 x31) (<= x32 x11) (<= y12 y31) (<= y32 y11))}
 
-{\tt (or (and (< x11 x22) (< x22 x12)) (and (< x11 x21) (< x21 x12))))}
-
-$\cdots \cdots$
-
-{\tt (and (or (and (< y11 y32) (< y32 y12)) (and (< y11 y31) (< y31 y12)))}
-
-{\tt (or (and (< x11 x32) (< x32 x12)) (and (< x11 x31) (< x31 x12))))))}
-
-{\tt (not (and (= y11 y21) (= x11 x21)))}
-
-{\tt (not (and (= y31 y21) (= x31 x21)))}
-
-{\tt (not (and (= y11 y31) (= x11 x31)))}
+{\tt (or (<= x32 x21) (<= x22 x31) (<= y32 y21) (<= y22 y31))}
 
 {\tt ;; not overlap among regular components}
 
@@ -548,89 +532,89 @@ Applying {\tt yices-smt -m part$1\_2$.smt}, we test out a satisfiable chip desig
 
 {\tt sat}
 
-{\tt(= x11 9)}
+{\tt(= x11 4)}
 
-{\tt(= x12 11)}
+{\tt(= x12 6)}
 
-{\tt(= y11 1)}
+{\tt(= y11 2)}
 
-{\tt(= y12 5)}
+{\tt(= y12 6)}
 
-{\tt(= x21 7)}
+{\tt(= x21 0)}
 
-{\tt(= x22 9)}
+{\tt(= x22 4)}
 
-{\tt(= y21 18)}
+{\tt(= y21 20)}
 
 {\tt(= y22 22)}
 
-{\tt(= x31 27)}
+{\tt(= x31 21)}
 
-{\tt(= x32 29)}
+{\tt(= x32 23)}
 
-{\tt(= y31 7)}
+{\tt(= y31 10)}
 
-{\tt(= y32 11)}
+{\tt(= y32 14)}
 
-{\tt(= n11 0)}
+{\tt(= n11 12)}
 
-{\tt(= n12 7)}
+{\tt(= n12 21)}
 
-{\tt(= m11 11)}
+{\tt(= m11 10)}
 
-{\tt(= m12 20)}
+{\tt(= m12 17)}
 
-{\tt(= n21 17)}
+{\tt(= n21 23)}
 
 {\tt(= n22 29)}
 
-{\tt(= m21 11)}
+{\tt(= m21 10)}
 
-{\tt(= m22 17)}
+{\tt(= m22 22)}
 
-{\tt(= n31 11)}
+{\tt(= n31 4)}
 
-{\tt(= n32 29)}
+{\tt(= n32 22)}
 
-{\tt(= m31 0)}
+{\tt(= m31 17)}
 
-{\tt(= m32 5)}
+{\tt(= m32 22)}
 
-{\tt(= n41 7)}
+{\tt(= n41 14)}
 
-{\tt(= n42 17)}
+{\tt(= n42 21)}
 
-{\tt(= m41 11)}
+{\tt(= m41 0)}
 
-{\tt(= m42 18)}
+{\tt(= m42 10)}
 
-{\tt(= n51 9)}
+{\tt(= n51 0)}
 
-{\tt(= n52 29)}
+{\tt(= n52 4)}
 
-{\tt(= m51 18)}
+{\tt(= m51 0)}
 
-{\tt(= m52 22)}
+{\tt(= m52 20)}
 
-{\tt(= n61 9)}
+{\tt(= n61 5)}
 
-{\tt(= n62 19)}
+{\tt(= n62 11)}
 
-{\tt(= m61 5)}
+{\tt(= m61 6)}
 
-{\tt(= m62 11)}
+{\tt(= m62 16)}
 
-{\tt(= n71 19)}
+{\tt(= n71 6)}
 
-{\tt(= n72 27)}
+{\tt(= n72 14)}
 
-{\tt(= m71 5)}
+{\tt(= m71 0)}
 
-{\tt(= m72 11)}
+{\tt(= m72 6)}
 
-{\tt(= n81 1)}
+{\tt(= n81 21)}
 
-{\tt(= n82 9)}
+{\tt(= n82 29)}
 
 {\tt(= m81 0)}
 
