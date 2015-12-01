@@ -54,29 +54,29 @@ The pallets of the same building blocks have the same weight, $weight(j)$. Each 
 Now we consider the conditions for the delivery.
 
 \begin{description}
-  \item[Condition 1:] $t_{ij}$ should be no less than $0$.
+  \item[Clause 1:] $t_{ij}$ should be no less than $0$.
 
   This is expressed by the formula
   \[ \bigwedge_{i,j:1 \leq i \leq m \wedge 1 \leq j \leq 5} t_{ij} \geq 0.\]
-  \item[Condition 2:] Every truck has a capacity of $C$ kg.
+  \item[Clause 2:] Every truck has a capacity of $C$ kg.
 
   \[ \bigwedge_{i=1}^m  (\sum_{j=1}^5 t_{ij} \times weight(j)) \leq C .\]
-  \item[Condition 3:] Every truck can carry at most eight pallets.
+  \item[Clause 3:] Every truck can carry at most eight pallets.
 
   \[ \bigwedge_{i=1}^m (\sum_{j=1}^5 t_{ij}) \leq M .\]
-  \item[Condition 4:] The total numbers of the pallets of the other obscure building blocks should be exact the same as the given number.
+  \item[Clause 4:] The total numbers of the pallets of the other obscure building blocks should be exact the same as the given number.
 
   \[ \bigwedge_{1\leq j \leq 5} (\sum_{i=1}^m t_{ij}) = \sharp pallets(j) .\]
 
-  \item[Condition 5:] Prittles and crottles are not allowed to be put in the same truck.
+  \item[Clause 5:] Prittles and crottles are not allowed to be put in the same truck.
 
   \[ \bigwedge_{i=1}^m t_{i2}=0 \vee t_{i4}=0 .\]
-  \item[Condition 6:] Only two of the trucks can deliver skipples.
+  \item[Clause 6:] Only two of the trucks can deliver skipples.
 
       So let's assume the $m$-th and $m-2$-th trucks can deliver skipples.
 
   \[ t_{m3} + t_{(m-2)3} = M .\]
-  \item[Condition 7:] No two pallets of dupples may be in the same truck.
+  \item[Clause 7:] No two pallets of dupples may be in the same truck.
 
   \[ \bigwedge_{i=1}^m t_{i5} \leq 1 .\]
 \end{description}
@@ -86,9 +86,9 @@ ingredients, that is,
 \[ \bigwedge_{i,j:1 \leq i \leq m, 1 \leq j \leq 5} t_{ij} \geq 0 \;\; \wedge \]
 \[ \bigwedge_{i=1}^m  (\sum_{j=1}^5 t_{ij} \times weight(j)) \leq C \;\; \wedge \]
 \[ \bigwedge_{i=1}^m (\sum_{j=1}^5 t_{ij}) \leq M \;\; \wedge \]
-\[ \bigwedge_{1\leq j \leq5, j\neq2} (\sum_{i=1}^m t_{ij}) = \sharp pallets(j) \;\; \wedge \]
+\[ \bigwedge_{1\leq j \leq5} (\sum_{i=1}^m t_{ij}) = \sharp pallets(j) \;\; \wedge \]
 \[ \bigwedge_{i=1}^m t_{i2}=0 \vee t_{i4}=0 \;\; \wedge \]
-\[ t_{m3} + t_{(m-1)3} = M \;\; \wedge \]
+\[ t_{m3} + t_{(m-2)3} = M \;\; \wedge \]
 \[ \bigwedge_{i=1}^m t_{i5} \leq 1 \]
 
 This formula is easily expressed in SMT syntax. For Problem 1, we define $m = 6$, $M = 8$, $C = 7800$, and the table below.
@@ -118,11 +118,7 @@ With the values above, we get the following Yices codes.
 
 {\tt (t21 Int) (t22 Int) (t23 Int) (t24 Int) (t25 Int) }
 
-{\tt (t31 Int) (t32 Int) (t33 Int) (t34 Int) (t35 Int) }
-
-{\tt (t41 Int) (t42 Int) (t43 Int) (t44 Int) (t45 Int) }
-
-{\tt (t51 Int) (t52 Int) (t53 Int) (t54 Int) (t55 Int) }
+$\cdots \cdots$
 
 {\tt (t61 Int) (t62 Int) (t63 Int) (t64 Int) (t65 Int) }
 
@@ -144,11 +140,7 @@ $\cdots \cdots$
 
 {\tt (<= (+ (* t21 700) (* t22 800) (* t23 1000) (* t24 1500) (* t25 100)) 7800)}
 
-{\tt (<= (+ (* t31 700) (* t32 800) (* t33 1000) (* t34 1500) (* t35 100)) 7800)}
-
-{\tt (<= (+ (* t41 700) (* t42 800) (* t43 1000) (* t44 1500) (* t45 100)) 7800)}
-
-{\tt (<= (+ (* t51 700) (* t52 800) (* t53 1000) (* t54 1500) (* t55 100)) 7800)}
+$\cdots \cdots$
 
 {\tt (<= (+ (* t61 700) (* t62 800) (* t63 1000) (* t64 1500) (* t65 100)) 7800) }
 
@@ -156,11 +148,7 @@ $\cdots \cdots$
 
 {\tt (<= (+ t21 t22 t23 t24 t25) 8)}
 
-{\tt (<= (+ t31 t32 t33 t34 t35) 8)}
-
-{\tt (<= (+ t41 t42 t43 t44 t45) 8)}
-
-{\tt (<= (+ t51 t52 t53 t54 t55) 8)}
+$\cdots \cdots$
 
 {\tt (<= (+ t61 t62 t63 t64 t65) 8)}
 
@@ -178,11 +166,7 @@ $\cdots \cdots$
 
 {\tt (or (= t22 0) (= t24 0)) }
 
-{\tt (or (= t32 0) (= t34 0)) }
-
-{\tt (or (= t42 0) (= t44 0)) }
-
-{\tt (or (= t52 0) (= t54 0)) }
+$\cdots \cdots$
 
 {\tt (or (= t62 0) (= t64 0)) }
 
@@ -263,9 +247,11 @@ The following result is yielded within a fraction of a second:
 {\tt (= t31 0)}
 
 }
+\vspace{3mm}
+Here is one of the solution.
 
-\begin{table}
-  \centering
+\vspace{2mm}
+  \begin{center}
   \begin{tabular}{|l|c|c|c|c|c|}
     \hline
     % after \\: \hline or \cline{col1-col2} \cline{col3-col4} ...
@@ -278,8 +264,7 @@ The following result is yielded within a fraction of a second:
     Truck 6 & 0 & 3 & 4 & 0 & 1 \\
     \hline
   \end{tabular}
-\end{table}
-
+\end{center}
 \subsection*{Remark}
 In this problem, we are required to find out the maximum number of the pallets of prittles. Such kind of maximum values searching is likely to become very time-consuming since there is no explicitly close upper bound to start the searching.
 
@@ -298,10 +283,14 @@ One more note is for the people who are interested in setting the number of truc
 Decreasing the number of trucks is more of interest. We did some testing to figure out how many pallets of prittles can satisfy these conditions with fewer trucks. When there are five trucks in all, ten pallets of prittles can be delivered with the satisfiability of the conditions. With fewer trucks, no satisfiability is reached. Since one truck can only deliver one pallet of drupples due to the condition, the number of trucks has to be larger than the number of pallets of drupples for delivery. It can be expressed as this
 \[ \sum_{i=1}^m t_{i5}\leq m \]
 
+\newpage
+
 \input{Problem2.tex}
 
+\newpage
 \input{Problem3.tex}
 
+\newpage
 \input{Problem4.tex}
 
 \end{document}
