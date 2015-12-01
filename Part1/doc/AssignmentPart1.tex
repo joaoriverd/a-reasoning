@@ -47,9 +47,51 @@ Investigate what is the maximum number of pallets of prittles that can be delive
 
 \subsection*{Solution:}
 
-We introduce some variables into the problem so that the $i$-th truck delivers pallets of obscure building blocks labeled $j$, $1\leq i \leq6$ and $1\leq j \leq5$.
+We generalize the problem to offer $m$ trucks to deliver the pallets. $m$ is a positive integer. Then we introduce some variables $t_{ij}$ for $i = 1, ..., m$ and $j = 1,...,5$, which represents the number of pallets of obscure building blocks $j$ on the $i$-th truck. $t_{ij}$ is a nature number. Every truck has a capacity, which is denoted as $C$, and the maximum number of pallets each truck can carry is $M$ kg.
 
-Then we introduce $t_{ij}$ as a nature number, which represents the number of pallets of obscure building block $j$ on the $i$-th truck.
+The pallets of the same building blocks have the same weight, $weight(j)$. Each kind of building blocks has a predefined number, $\sharp pallets(j)$.
+
+Now we consider the conditions for the delivery.
+
+\begin{description}
+  \item[Condition 1:] $t_{ij}$ should be no less than $0$.
+
+  This is expressed by the formula
+  \[ \bigwedge_{i,j:1 \leq i \leq m \wedge 1 \leq j \leq 5} t_{ij} \geq 0.\]
+  \item[Condition 2:] Every truck has a capacity of $C$ kg.
+
+  \[ \bigwedge_{i=1}^m  (\sum_{j=1}^5 t_{ij} \times weight(j)) \leq C .\]
+  \item[Condition 3:] Every truck can carry at most eight pallets.
+
+  \[ \bigwedge_{i=1}^m (\sum_{j=1}^5 t_{ij}) \leq M .\]
+  \item[Condition 4:] The total numbers of the pallets of the other obscure building blocks should be exact the same as the given number.
+
+  \[ \bigwedge_{1\leq j \leq 5} (\sum_{i=1}^m t_{ij}) = \sharp pallets(j) .\]
+
+  \item[Condition 5:] Prittles and crottles are not allowed to be put in the same truck.
+
+  \[ \bigwedge_{i=1}^m t_{i2}=0 \vee t_{i4}=0 .\]
+  \item[Condition 6:] Only two of the trucks can deliver skipples.
+
+      So let's assume the $m$-th and $m-2$-th trucks can deliver skipples.
+
+  \[ t_{m3} + t_{(m-2)3} = M .\]
+  \item[Condition 7:] No two pallets of dupples may be in the same truck.
+
+  \[ \bigwedge_{i=1}^m t_{i5} \leq 1 .\]
+\end{description}
+
+The total formula now consists of the conjunction of all these
+ingredients, that is,
+\[ \bigwedge_{i,j:1 \leq i \leq m, 1 \leq j \leq 5} t_{ij} \geq 0 \;\; \wedge \]
+\[ \bigwedge_{i=1}^m  (\sum_{j=1}^5 t_{ij} \times weight(j)) \leq C \;\; \wedge \]
+\[ \bigwedge_{i=1}^m (\sum_{j=1}^5 t_{ij}) \leq M \;\; \wedge \]
+\[ \bigwedge_{1\leq j \leq5, j\neq2} (\sum_{i=1}^m t_{ij}) = \sharp pallets(j) \;\; \wedge \]
+\[ \bigwedge_{i=1}^m t_{i2}=0 \vee t_{i4}=0 \;\; \wedge \]
+\[ t_{m3} + t_{(m-1)3} = M \;\; \wedge \]
+\[ \bigwedge_{i=1}^m t_{i5} \leq 1 \]
+
+This formula is easily expressed in SMT syntax. For Problem 1, we define $m = 6$, $M = 8$, $C = 7800$, and the table below.
 \begin{center}
 \begin{tabular}{|c|c|c|c|c|c|}
   \hline
@@ -62,48 +104,7 @@ Then we introduce $t_{ij}$ as a nature number, which represents the number of pa
 \end{tabular}
 \end{center}
 
-Now we consider the conditions for the delivery.
-
-\begin{description}
-  \item[Condition 1:] $t_{ij}$ should be no less than $0$.
-
-  This is expressed by the formula
-  \[ \bigwedge_{i,j:1 \leq i \leq 6, 1 \leq j \leq 5} t_{ij} \geq 0.\]
-  \item[Condition 2:] Every truck has a capacity of 7800 kg.
-
-  \[ \bigwedge_{i=1}^6  (\sum_{j=1}^5 t_{ij} \times weight(j)) \leq 7800 .\]
-  \item[Condition 3:] Every truck can carry at most eight pallets.
-
-  \[ \bigwedge_{i=1}^6 (\sum_{j=1}^5 t_{ij}) \leq 8 .\]
-  \item[Condition 4:] The total numbers of the pallets of the other obscure building blocks should be exact the same as the given number.
-
-  \[ \bigwedge_{1\leq j \leq5} (\sum_{i=1}^6 t_{ij}) = \sharp pallets(j) .\]
-
-  \item[Condition 5:] Prittles and crottles are not allowed to be put in the same truck.
-
-  \[ \bigwedge_{i=1}^6 t_{i2}=0 \vee t_{i4}=0 .\]
-  \item[Condition 6:] Only two of the six trucks can deliver skipples.
-
-      So let's assume the fourth and sixth trucks can deliver skipples.
-
-  \[ t_{43} + t_{63} = 8 .\]
-  \item[Condition 7:] No two pallets of dupples may be in the same truck.
-
-  \[ \bigwedge_{i=1}^6 t_{i5} \leq 1 .\]
-\end{description}
-
-The total formula now consists of the conjunction of all these
-ingredients, that is,
-\[ \bigwedge_{i,j:1 \leq i \leq 6, 1 \leq j \leq 5} t_{ij} \geq 0 \;\; \wedge \]
-\[ \bigwedge_{i=1}^6  (\sum_{j=1}^5 t_{ij} \times weight(j)) \leq 7800 \;\; \wedge \]
-\[ \bigwedge_{i=1}^6 (\sum_{j=1}^5 t_{ij}) \leq 8 \;\; \wedge \]
-\[ \bigwedge_{1\leq j \leq5, j\neq2} (\sum_{i=1}^6 t_{ij}) = \sharp pallets(j) \;\; \wedge \]
-\[ (\sum_{i=1}^6 t_{i2}) \leq 25 \;\; \wedge \]
-\[ \bigwedge_{i=1}^6 t_{i2}=0 \vee t_{i4}=0 \;\; \wedge \]
-\[ t_{43} + t_{63} = 8 \;\; \wedge \]
-\[ \bigwedge_{i=1}^6 t_{i5} \leq 1 \]
-
-This formula is easily expressed in SMT syntax.
+With the values above, we get the following Yices codes.
 
 {\footnotesize
 
@@ -271,7 +272,7 @@ The following result is yielded within a fraction of a second:
      & nuzzles & prittles & skipples & crottles & dupples \\
     Truck 1 & 0 & 0 & 0 & 5 & 1 \\
     Truck 2 & 4 & 0 & 0 & 3 & 1 \\
-    Truck 3 & 0 & 8 & 0 & 0 & 1 \\
+    Truck 3 & 0 & 8 & 0 & 0 & 0 \\
     Truck 4 & 0 & 0 & 4 & 2 & 1 \\
     Truck 5 & 0 & 7 & 0 & 0 & 1 \\
     Truck 6 & 0 & 3 & 4 & 0 & 1 \\
@@ -279,12 +280,23 @@ The following result is yielded within a fraction of a second:
   \end{tabular}
 \end{table}
 
-
 \subsection*{Remark}
+In this problem, we are required to find out the maximum number of the pallets of prittles. Such kind of maximum values searching is likely to become very time-consuming since there is no explicitly close upper bound to start the searching.
 
+For this problem, we first find out the theoretically possible maximum number of the pallets of prittles through calculation. Because the capacity of each track is given, and it is also provided the total weights of the pallets of the other obscure building blocks, we can estimate the number.
+
+  $\frac{7800 \times 6 - 700\times4 - 1000\times8 - 1500\times10 - 100\times5}{800} = 25.625$
+
+Because the number of pallets is a nature number, the maximum number should not be more than 25. Therefore, we can start the debugging from $n = 25$ downwards.
 
 \subsection*{Generalization}
 
+We generalized all the invariants except the total number of kinds of the building blocks in this problem, because most of the requirements come from the features of different building blocks, which indicates that adding more different building blocks will generate more requirements, and as a consequent, the entire formula we summarized in the end of the solution is not applicable.
+
+One more note is for the people who are interested in setting the number of trucks, $m$, larger than $10$. They need to care care about the notations of the variables $t_{ij}$. For instance, the number of pallets of building blocks labeled $1$ on the eleventh truck, $t_{11,1}$, is expressed as  $t111$ in Yices codes. This expression can also represent the number of pallets of building blocks labeled $11$ on the first truck, $t_{1,11}$. An extra symbol between the two numbers $i$ and $j$ is required to avoid this ambiguity.
+
+Decreasing the number of trucks is more of interest. We did some testing to figure out how many pallets of prittles can satisfy these conditions with fewer trucks. When there are five trucks in all, ten pallets of prittles can be delivered with the satisfiability of the conditions. With fewer trucks, no satisfiability is reached. Since one truck can only deliver one pallet of drupples due to the condition, the number of trucks has to be larger than the number of pallets of drupples for delivery. It can be expressed as this
+\[ \sum_{i=1}^m t_{i5}\leq m \]
 
 
 \section*{Problem 2}
