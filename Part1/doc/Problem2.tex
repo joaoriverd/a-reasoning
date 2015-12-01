@@ -13,63 +13,52 @@ Give a chip design containing three power components and eight regular component
 \vspace{4mm}
 
 \subsection*{Solution:}
-First of all, we assume the chip plan is a positive plane whose left-bottom corner has coordinate $(0, 0)$, and right-top corner has coordinate $(29, 22)$.
-Next, we introduce coordinates to each corner of each components $(x_{ij}, y_{ij})$ to specify them.
-See below.
+First of all, we generalize this problem for any width $S_1$ and height $S_2$ of the chip and for any number $p$ and $r$ of power and regular components respectively. Assume the chip plan is a positive plane whose left-bottom corner has coordinate $(0, 0)$, then the right-top corner has coordinate $(S_1, S_2)$.
+Next, we introduce $2 \times p$ coordinates of the form $(x_{ik}, y_{ik})$ for $i = 1, 2 , ... , p$ and $k = 1, 2$, to represent the corners of each power component. Hence, power component $i$ has coordinates $(x_{i1}, y_{i1})$, $(x_{i2}, y_{i1})$, $(x_{i1}, y_{i2})$ and $(x_{i2}, y_{i2})$.
 
-\begin{enumerate}
-  \item For the three power components:\\
-  Power component 1 has coordinates $(x_{11}, y_{11})$, $(x_{12}, y_{11})$, $(x_{12}, y_{11})$ and $(x_{12}, y_{12})$.\\
-  Power component 2 has coordinates $(x_{21}, y_{21})$, $(x_{22}, y_{21})$, $(x_{22}, y_{21})$ and $(x_{22}, y_{22})$.\\
-  Power component 3 has coordinates $(x_{31}, y_{31})$, $(x_{32}, y_{31})$, $(x_{32}, y_{31})$ and $(x_{32}, y_{32})$.
-  \item For the eight regular components:\\
-  Regular component 1 has coordinates $(n_{11}, m_{11})$, $(n_{12}, m_{11})$, $(n_{12}, m_{11})$ and $(n_{12}, m_{12})$.\\
-  Regular component 2 has coordinates $(n_{21}, m_{21})$, $(n_{22}, m_{21})$, $(n_{22}, m_{21})$ and $(n_{22}, m_{22})$.
+Similarly, we introduce $2 \times r$ coordinates of the form $(n_{jk}, m_{jk})$ for $j = 1, 2 , ... , r$ and $k = 1, 2$, to represent the corners of each regular component.
 
-  $\cdots \cdots$
-
-  Regular component 8 has coordinates $(n_{81}, m_{81})$, $(n_{82}, m_{81})$, $(n_{82}, m_{81})$ and $(n_{82}, m_{82})$.
-\end{enumerate}
-Thus, we plan to put the components onto the plan in terms of the constraints.
+Now, we give formulas that translates the constraints in terms of this variables.
 
 \begin{description}
-  \item[Constraint 1:] Now the chip is a positive plane, so all the coordinates should be positive. The width of the chip is 29 and the height is 22.
+  \item[Constraint 1:] The chip is a positive plane, so all the coordinates should be positive. Additionally, the width of the chip is $S_1$ and the height is $S_2$.
 
   Then we have
-  \[  \bigwedge_{i=1}^3 29 \geq x_{i2} \geq x_{i1} \geq 0 \wedge 22 \geq y_{i2} \geq y_{i1} \geq 0 \;\; \wedge \]
-  \[  \bigwedge_{i=1}^8 29 \geq n_{i2} \geq n_{i1} \geq 0 \wedge 22 \geq m_{i2} \geq m_{i1} \geq 0 \]
-  \item[Constraint 2:] All power components have width 4 and height 2,
-  and the sizes of the eight regular components are $9 \times 7$, $12 \times 6$, $10 \times 7$, $18 \times 5$, $20 \times 4$, $10 \times 6$, $8 \times 6$ and $10 \times 8$, respectively.
-  All components may be turned 90.
+  \[  \bigwedge_{i=1}^p S_1 \geq x_{i2} \geq x_{i1} \geq 0 \wedge S_2 \geq y_{i2} \geq y_{i1} \geq 0 \;\; \wedge \]
+  \[  \bigwedge_{i=1}^r S_1 \geq n_{i2} \geq n_{i1} \geq 0 \wedge S_2 \geq m_{i2} \geq m_{i1} \geq 0 \]
+  
 
-  Then we have
-  \[  \bigwedge_{i=1}^3 ((x_{i2} - x_{i1} = 4 \; \wedge \; y_{i2} - y_{i1} = 2) \;\; \vee \]
-  \[ (x_{i2} - x_{i1} = 2 \; \wedge \; y_{i2} - y_{i1} = 4)) \]
-  So do the coordinates for the Regular components. However their sizes are distinct,
-  this makes more writing and coding. Here we only show the clause for the first regular component,
-  whose size is $9 \times 7$. \\
-  \[ (n_{12} - n_{11} = 9 \; \wedge \; m_{12} - m_{11} = 7) \;\; \vee (n_{12} - n_{11} = 7 \; \wedge \; m_{12} - m_{11} = 9) \]
+  \item[Constraint 2:] All coordinates of a given component have to respect its respective size, also a component may be turned 90. To formulate this, we define $Z_1$ and $Z_2$ as the height and width of all power components, and $H_{j}$ and $W_{j}$ as the height and width of regular component $j$.
+
+  Then we have the following formula for power components:
+  \[  \bigwedge_{i=1}^p ((x_{i2} - x_{i1} = Z_1 \; \wedge \; y_{i2} - y_{i1} = Z_2) \;\; \vee \]
+  \[ (x_{i2} - x_{i1} = Z_2 \; \wedge \; y_{i2} - y_{i1} = Z_1)) \]
+
+  Similarly, the formula for regular components is:
+  \[  \bigwedge_{j=1}^r (n_{j2} - n_{j1} = W_j \; \wedge \; m_{j2} - m_{j1} = H_j) \;\; \vee (n_{j2} - n_{j1} = H_j \; \wedge \; m_{j2} - m_{j1} = W_j) \]
+  
+  
   \item[Constraint 3:] All components may not overlap.
 
 \begin{center}
 \includegraphics[width=0.5\textwidth]{Part1_2_1.png}
 \end{center}
-  As the figure shows, only if a component's $x_{i1}$ is larger than the other one's $x_{k2}$, then these two components are not overlapped. We also have the case in the y direction.
+  As the figure shows, only if a component's $x_{i1}$ is larger than the other one's $x_{k2}$, then these two components are not overlapped. We also have the case in the $y$ direction. Hence the formulas that express the two components may not overlap are the following.
 
   Among the power components:
 
-  \[  \bigwedge_{i,k: 1 \leq i \leq 3, 1 \leq k \leq 3, i \neq k}
-  x_{i2} \leq x_{k1} \; \vee \; x_{k2} \leq x_{i1} \; \vee \; y_{i2} \leq y_{k1} \; \vee \; y_{k2} \leq y_{i1} \]
+  \[  \bigwedge_{i,l: 1 \leq i < l \leq p}
+  x_{i2} \leq x_{l1} \; \vee \; x_{l2} \leq x_{i1} \; \vee \; y_{i2} \leq y_{l1} \; \vee \; y_{l2} \leq y_{i1} \]
 
   Among the regular components:
 
-  \[  \bigwedge_{i,k: 1 \leq i \leq 8, 1 \leq k \leq 8, i \neq k}
-  n_{i2} \leq n_{k1} \; \vee \; n_{k2} \leq n_{i1} \; \vee \; m_{i2} \leq m_{k1} \; \vee \; m_{k2} \leq m_{i1}  \]
+  \[  \bigwedge_{j,l: 1 \leq j < l \leq r}
+  n_{j2} \leq n_{l1} \; \vee \; n_{l2} \leq n_{j1} \; \vee \; m_{j2} \leq m_{l1} \; \vee \; m_{l2} \leq m_{j1}  \]
 
   Between the power components and the regular components:
 
-  \[  \bigwedge_{i,k: 1 \leq i \leq 3, 1 \leq k \leq 8, i \neq k}
-   x_{i2} \leq n_{k1} \; \vee \; n_{k2} \leq x_{i1} \; \vee \; y_{i2} \leq m_{k1} \; \vee \; m_{k2} \leq y_{i1} \]
+  \[  \bigwedge_{i,k: 1 \leq i \leq p, 1 \leq j \leq r}
+   x_{i2} \leq n_{j1} \; \vee \; n_{j2} \leq x_{i1} \; \vee \; y_{i2} \leq m_{j1} \; \vee \; m_{j2} \leq y_{i1} \]
 
   \item[Constraint 4:] An edge of the regular component should have at least one point in common with an edge of the power component.
 
@@ -77,21 +66,21 @@ Thus, we plan to put the components onto the plan in terms of the constraints.
 \includegraphics[width=0.5\textwidth]{Part1_2_2.png}
 \end{center}
 
-  As the figure above shows, if two components are touched at least one point, then at least one coordinate of a component is the same as the other one. We consider it from the inverse way to make the clauses simpler. If two components have the same $x_{i1}$ value, only if their $y$-direction sides are not touched, then these two components are not in common with an edge of each other.
-  We denote this condition as follows.
+  As the figure above shows, if two components are touched at least by one point, then at least one coordinate of a component is the same as the other one. Based in this observation, we can state that when the $x$ coordinate of two components are the same, and also the $y$'s coordinate of one is bound by the $y$'s coordinates of the other component, we can conclude that they are touching. The same holds when they share a $y$'s coordinate. We denote this condition as follows.
 
-  \[  \bigwedge_{i,k: 1 \leq i \leq 3, 1 \leq k \leq 8}
+  \[  \bigwedge_{i,k: 1 \leq i \leq p, 1 \leq k \leq r}
   ((x_{i2} = n_{k1} \; \vee \; x_{i1} = n_{k2}) \; \wedge \;
-  \neg (y_{i2} < m_{k1} \vee m_{k2} < y_{i1}) \; \vee \; \]
+  (y_{i2} \geq m_{k1} \wedge m_{k2} \geq y_{i1}) \; \vee \; \]
   \[  ((y_{i2} = m_{k1} \; \vee \; y_{i1} = m_{k2}) \; \wedge \;
-  \neg (x_{i2} < n_{k1} \vee n_{k2} < x_{i1}))) \]
+  (x_{i2} \geq n_{k1} \wedge n_{k2} \geq x_{i1}))) \]
+  
   \item[Constraint 5:] The power components' centres should differ at least 17 in either the $x$ direction or the $y$ direction (or both).
 
   The centers of the power components are $(x_{i1} + \frac{x_{i2} - x_{i1}}{2}, y_{i1} + \frac{y_{i2} - y_{i1}}{2} )$.
 
   For each pair of the power components, we have
 
-  \[  \bigwedge_{i,k: 1 \leq i < k \leq 3}
+  \[  \bigwedge_{i,k: 1 \leq i < k \leq p}
   [ (x_{i1} + \frac{x_{i2} - x_{i1}}{2}) - (x_{k1} + \frac{x_{k2} - x_{k1}}{2}) \geq 17 \; \vee \; \]
   \[ (x_{k1} + \frac{x_{k2} - x_{k1}}{2}) - (x_{i1} + \frac{x_{i2} - x_{i1}}{2}) \geq 17 \; \vee \; \]
   \[ (y_{k1} + \frac{y_{k2} - y_{k1}}{2}) - (y_{i1} + \frac{y_{i2} - y_{i1}}{2}) \geq 17 \; \vee \; \]
@@ -100,9 +89,9 @@ Thus, we plan to put the components onto the plan in terms of the constraints.
 
 \end{description}
 
-Making a conjunction of all the clauses derived from the constraints, we made the Yices smt cods.
+The total formula now consists of the conjunction of all these clauses. To solve this particular problem, we made the Yices smt code considering the number of power components $p=3$, the number of regular components $r=8$, and replacing the parameters $S_1$, $S_2$, $Z_1$, $Z_2$, $H_j$ and $W_j$ with its respective values of height and width as specified by the problem.
 
-This formula is easily expressed in SMT syntax.
+This is expressed in SMT syntax as follow:
 
 {\footnotesize
 
@@ -116,12 +105,6 @@ This formula is easily expressed in SMT syntax.
 
 {\tt (x21 Int) (x22 Int) (y21 Int) (y22 Int)}
 
-{\tt (x31 Int) (x32 Int) (y31 Int) (y32 Int)}
-
-{\tt (n11 Int) (n12 Int) (m11 Int) (m12 Int)}
-
-{\tt (n21 Int) (n22 Int) (m21 Int) (m22 Int)}
-
 $\cdots \cdots$
 
 {\tt (n81 Int) (n82 Int) (m81 Int) (m82 Int)}
@@ -133,12 +116,6 @@ $\cdots \cdots$
 {\tt (>= 29 x12) (>= x12 x11) (>= x11 0) (>= 22 y12) (>= y12 y11) (>= y11 0)}
 
 {\tt (>= 29 x22) (>= x22 x21) (>= x21 0) (>= 22 y22) (>= y22 y21) (>= y21 0)}
-
-{\tt (>= 29 x32) (>= x32 x31) (>= x31 0) (>= 22 y32) (>= y32 y31) (>= y31 0)}
-
-{\tt (>= 29 n12) (>= n12 n11) (>= n11 0) (>= 22 m12) (>= m12 m11) (>= m11 0)}
-
-{\tt (>= 29 n22) (>= n22 n21) (>= n21 0) (>= 22 m22) (>= m22 m21) (>= m21 0)}
 
 $\cdots \cdots$
 
@@ -263,75 +240,11 @@ Applying {\tt yices-smt -m part$1\_2$.smt}, we test out a satisfiable chip desig
 
 {\tt(= x32 23)}
 
-{\tt(= y31 10)}
-
-{\tt(= y32 14)}
-
-{\tt(= n11 12)}
-
-{\tt(= n12 21)}
-
-{\tt(= m11 10)}
-
-{\tt(= m12 17)}
-
-{\tt(= n21 23)}
-
-{\tt(= n22 29)}
-
-{\tt(= m21 10)}
-
-{\tt(= m22 22)}
-
-{\tt(= n31 4)}
-
-{\tt(= n32 22)}
-
-{\tt(= m31 17)}
-
-{\tt(= m32 22)}
-
-{\tt(= n41 14)}
-
-{\tt(= n42 21)}
-
-{\tt(= m41 0)}
-
-{\tt(= m42 10)}
-
-{\tt(= n51 0)}
-
-{\tt(= n52 4)}
-
-{\tt(= m51 0)}
-
-{\tt(= m52 20)}
-
-{\tt(= n61 5)}
-
-{\tt(= n62 11)}
-
-{\tt(= m61 6)}
-
-{\tt(= m62 16)}
-
-{\tt(= n71 6)}
-
-{\tt(= n72 14)}
-
-{\tt(= m71 0)}
-
-{\tt(= m72 6)}
-
-{\tt(= n81 21)}
-
-{\tt(= n82 29)}
-
-{\tt(= m81 0)}
-
-{\tt(= m82 10)}
+$\cdots \cdots$
 
 }
+
+The following picture illustrates the solution of this problem given by the tool.
 
 \begin{center}
 \includegraphics[width=0.8\textwidth]{Part1_2_3.png}
