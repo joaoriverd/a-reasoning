@@ -26,7 +26,7 @@ Now, we give formulas that translates the constraints in terms of this variables
   Then we have
   \[  \bigwedge_{i=1}^p S_1 \geq x_{i2} \geq x_{i1} \geq 0 \wedge S_2 \geq y_{i2} \geq y_{i1} \geq 0 \;\; \wedge \]
   \[  \bigwedge_{i=1}^r S_1 \geq n_{i2} \geq n_{i1} \geq 0 \wedge S_2 \geq m_{i2} \geq m_{i1} \geq 0 \]
-  
+
 
   \item[Constraint 2:] All coordinates of a given component have to respect its respective size, also a component may be turned 90. To formulate this, we define $Z_1$ and $Z_2$ as the height and width of all power components, and $H_{j}$ and $W_{j}$ as the height and width of regular component $j$.
 
@@ -36,8 +36,8 @@ Now, we give formulas that translates the constraints in terms of this variables
 
   Similarly, the formula for regular components is:
   \[  \bigwedge_{j=1}^r (n_{j2} - n_{j1} = W_j \; \wedge \; m_{j2} - m_{j1} = H_j) \;\; \vee (n_{j2} - n_{j1} = H_j \; \wedge \; m_{j2} - m_{j1} = W_j) \]
-  
-  
+
+
   \item[Constraint 3:] All components may not overlap.
 
 \begin{center}
@@ -66,14 +66,14 @@ Now, we give formulas that translates the constraints in terms of this variables
 \includegraphics[width=0.5\textwidth]{Part1_2_2.png}
 \end{center}
 
-  As the figure above shows, if two components are touched at least by one point, then at least one coordinate of a component is the same as the other one. Based in this observation, we can state that when the $x$ coordinate of two components are the same, and also the $y$'s coordinate of one is bound by the $y$'s coordinates of the other component, we can conclude that they are touching. The same holds when they share a $y$'s coordinate. We denote this condition as follows.
+  As the figure shows, if two components are touched at least by one point, then at least one coordinate of a component is the same as the other one. Based on this observation, we can state that when the $x$ coordinates of two components are the same, and also the $y$'s coordinate of one is bound by the $y$'s coordinates of the other component, we can conclude that they are touching. The same holds when they share a $y$'s coordinate. We denote this condition as follows.
 
   \[  \bigwedge_{i,k: 1 \leq i \leq p, 1 \leq k \leq r}
   ((x_{i2} = n_{k1} \; \vee \; x_{i1} = n_{k2}) \; \wedge \;
   (y_{i2} \geq m_{k1} \wedge m_{k2} \geq y_{i1}) \; \vee \; \]
   \[  ((y_{i2} = m_{k1} \; \vee \; y_{i1} = m_{k2}) \; \wedge \;
   (x_{i2} \geq n_{k1} \wedge n_{k2} \geq x_{i1}))) \]
-  
+
   \item[Constraint 5:] The power components' centres should differ at least 17 in either the $x$ direction or the $y$ direction (or both).
 
   The centers of the power components are $(x_{i1} + \frac{x_{i2} - x_{i1}}{2}, y_{i1} + \frac{y_{i2} - y_{i1}}{2} )$.
@@ -89,7 +89,7 @@ Now, we give formulas that translates the constraints in terms of this variables
 
 \end{description}
 
-The total formula now consists of the conjunction of all these clauses. To solve this particular problem, we made the Yices smt code considering the number of power components $p=3$, the number of regular components $r=8$, and replacing the parameters $S_1$, $S_2$, $Z_1$, $Z_2$, $H_j$ and $W_j$ with its respective values of height and width as specified by the problem.
+The total formula now consists of the conjunction of all these clauses. To solve this particular problem, we made the Yices smt code considering the number of power components $p=3$, the number of regular components $r=8$, and replacing the parameters $S_1$, $S_2$, $Z_1$, $Z_2$, $H_j$ and $W_j$ with its own values of height and width as specified by the problem.
 
 This is expressed in SMT syntax as follow:
 
@@ -252,4 +252,10 @@ The following picture illustrates the solution of this problem given by the tool
 
 \subsection*{Remark:}
 
-\subsection*{Generalization:}
+
+\subsection*{Generalization:} 
+We generalized our approach for any composition of a chip, some power components and regular components with known sizes to test if it is possible to obtain a fine chip design. Regardless the size of the chip and these components and the number of the components, this approach specifies two more constraints. One is the safe distance for the power components due to heat production. The other is the common touching between power components and regular components. These two constraints are derived from the characteristics of the components to apply to the chip. Different components have different characteristics, which may require different clauses to formulate. This is the limitation of our generalization. The satisfiability for a good chip design highly depends on the size of the components.
+
+
+
+
