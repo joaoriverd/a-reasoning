@@ -47,9 +47,21 @@ Investigate what is the maximum number of pallets of prittles that can be delive
 
 \subsection*{Solution:}
 
-We generalize the problem to offer $m$ trucks to deliver the pallets. $m$ is a positive integer. Then we introduce some variables $t_{ij}$ for $i = 1, ..., m$ and $j = 1,...,5$, which represents the number of pallets of obscure building blocks $j$ on the $i$-th truck. $t_{ij}$ is a nature number. Every truck has a capacity, which is denoted as $C$, and the maximum number of pallets each truck can carry is $M$ kg.
+We generalize the problem to offer $n$ trucks to deliver the pallets. $n$ is a positive integer. Then we introduce some variables $t_{ij}$ for $i = 1, ..., n$ and $j = 1,...,5$, which represents the number of pallets of obscure building blocks $j$ on the $i$-th truck. $t_{ij}$ is a natural number. Every truck has a capacity, which is denoted as $C$ kg, and the maximum number of pallets each truck can carry is $M$.
 
-The pallets of the same building blocks have the same weight, $weight(j)$. Each kind of building blocks has a predefined number, $\sharp pallets(j)$.
+The following table shows which index is related to which building material:
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|}
+  \hline
+  % after \\: \hline or \cline{col1-col2} \cline{col3-col4} ...
+    & nuzzles & prittles & skipples & crottles & dupples \\
+  $j$ & 1 & 2 & 3 & 4 & 5 \\
+  \hline
+\end{tabular}
+\end{center}
+
+The pallets of the same building blocks have the same weight, $weight(j)$. Each kind of building blocks has a predefined number of pallets, $\sharp pallets(j)$.
 
 Now we consider the conditions for the delivery.
 
@@ -57,41 +69,41 @@ Now we consider the conditions for the delivery.
   \item[Clause 1:] $t_{ij}$ should be no less than $0$.
 
   This is expressed by the formula
-  \[ \bigwedge_{i,j:1 \leq i \leq m \wedge 1 \leq j \leq 5} t_{ij} \geq 0.\]
-  \item[Clause 2:] Every truck has a capacity of $C$ kg.
+  \[ \bigwedge_{i,j:1 \leq i \leq n \wedge 1 \leq j \leq 5} t_{ij} \geq 0.\]
+  \item[Clause 2:] Every truck has a maximum capacity of $C$ kg.
 
-  \[ \bigwedge_{i=1}^m  (\sum_{j=1}^5 t_{ij} \times weight(j)) \leq C .\]
-  \item[Clause 3:] Every truck can carry at most eight pallets.
+  \[ \bigwedge_{i=1}^n  (\sum_{j=1}^5 t_{ij} \times weight(j)) \leq C .\]
+  \item[Clause 3:] Every truck can carry at most $M$ pallets.
 
-  \[ \bigwedge_{i=1}^m (\sum_{j=1}^5 t_{ij}) \leq M .\]
-  \item[Clause 4:] The total numbers of the pallets of the other obscure building blocks should be exact the same as the given number.
+  \[ \bigwedge_{i=1}^n (\sum_{j=1}^5 t_{ij}) \leq M .\]
+  \item[Clause 4:] The total numbers of the pallets of each obscure building blocks should be exactly the same as the given number by $\sharp pallets(j)$.
 
-  \[ \bigwedge_{1\leq j \leq 5} (\sum_{i=1}^m t_{ij}) = \sharp pallets(j) .\]
+  \[ \bigwedge_{j=1}^5 (\sum_{i=1}^n t_{ij}) = \sharp pallets(j) .\]
 
-  \item[Clause 5:] Prittles and crottles are not allowed to be put in the same truck.
+  \item[Clause 5:] Prittles and crottles are not allowed to be put in the same truck. So in every truck the number of prittles or the number of crottles should be zero.
 
-  \[ \bigwedge_{i=1}^m t_{i2}=0 \vee t_{i4}=0 .\]
+  \[ \bigwedge_{i=1}^n t_{i2}=0 \vee t_{i4}=0 .\]
   \item[Clause 6:] Only two of the trucks can deliver skipples.
 
-      So let's assume the $m$-th and $m-2$-th trucks can deliver skipples.
+      So let's assume the $n$-th and $n-2$-th trucks can deliver skipples. Then the amount of skipples in these two trucks should be equal to the total amount of this material.
 
-  \[ t_{m3} + t_{(m-2)3} = M .\]
-  \item[Clause 7:] No two pallets of dupples may be in the same truck.
+  \[ t_{n3} + t_{(n-2)3} = \sharp pallets(3) .\]
+  \item[Clause 7:] No two pallets of dupples may be in the same truck. This means that at most one pallet of dupple is allowed in each truck.
 
-  \[ \bigwedge_{i=1}^m t_{i5} \leq 1 .\]
+  \[ \bigwedge_{i=1}^n t_{i5} \leq 1 .\]
 \end{description}
 
 The total formula now consists of the conjunction of all these
 ingredients, that is,
-\[ \bigwedge_{i,j:1 \leq i \leq m, 1 \leq j \leq 5} t_{ij} \geq 0 \;\; \wedge \]
-\[ \bigwedge_{i=1}^m  (\sum_{j=1}^5 t_{ij} \times weight(j)) \leq C \;\; \wedge \]
-\[ \bigwedge_{i=1}^m (\sum_{j=1}^5 t_{ij}) \leq M \;\; \wedge \]
-\[ \bigwedge_{1\leq j \leq5} (\sum_{i=1}^m t_{ij}) = \sharp pallets(j) \;\; \wedge \]
-\[ \bigwedge_{i=1}^m t_{i2}=0 \vee t_{i4}=0 \;\; \wedge \]
-\[ t_{m3} + t_{(m-2)3} = M \;\; \wedge \]
-\[ \bigwedge_{i=1}^m t_{i5} \leq 1 \]
+\[ \bigwedge_{i,j:1 \leq i \leq n, 1 \leq j \leq 5} t_{ij} \geq 0 \;\; \wedge \]
+\[ \bigwedge_{i=1}^n  (\sum_{j=1}^5 t_{ij} \times weight(j)) \leq C \;\; \wedge \]
+\[ \bigwedge_{i=1}^n (\sum_{j=1}^5 t_{ij}) \leq M \;\; \wedge \]
+\[ \bigwedge_{j=1}^5 (\sum_{i=1}^n t_{ij}) = \sharp pallets(j) \;\; \wedge \]
+\[ \bigwedge_{i=1}^n t_{i2}=0 \vee t_{i4}=0 \;\; \wedge \]
+\[ t_{n3} + t_{(n-2)3} = \sharp pallets(3) \;\; \wedge \]
+\[ \bigwedge_{i=1}^n t_{i5} \leq 1 \]
 
-This formula is easily expressed in SMT syntax. For Problem 1, we define $m = 6$, $M = 8$, $C = 7800$, and the table below.
+This formula is easily expressed in SMT syntax. For Problem 1, we define the number of trucks $n = 6$, the maximum number of pallets in each truck $M = 8$, the capacity of the trucks as $C = 7800$ kg, and the parameters $weight(j)$ and $\sharp pallets(j)$ as specified in the table below.
 \begin{center}
 \begin{tabular}{|c|c|c|c|c|c|}
   \hline
@@ -99,7 +111,7 @@ This formula is easily expressed in SMT syntax. For Problem 1, we define $m = 6$
     & nuzzles & prittles & skipples & crottles & dupples \\
   $j$ & 1 & 2 & 3 & 4 & 5 \\
   $weight(j)$ & 700kg & 800kg & 1000kg & 1500kg & 100kg \\
-  $\sharp pallets(j)$ & 4 & $n$ & 8 & 10 & 5 \\
+  $\sharp pallets(j)$ & 4 & $P$ & 8 & 10 & 5 \\
   \hline
 \end{tabular}
 \end{center}
@@ -108,7 +120,7 @@ With the values above, we get the following Yices codes.
 
 {\footnotesize
 
-{\tt (benchmark Part1\_1.smt}
+{\tt benchmark Part1\_1.smt}
 
 {\tt :logic $QF\_ALIA$}
 
@@ -170,16 +182,14 @@ $\cdots \cdots$
 
 {\tt (or (= t62 0) (= t64 0)) }
 
-{\tt (or}
-
 {\tt (= (+ t43 t63) 8) }
 
 {\tt (<= t15 1) (<= t25 1) (<= t35 1) (<= t45 1) (<= t55 1) (<= t65 1)}
 
-{\tt )) }
+{\tt ) }
 }
 
-Applying {\tt yices-smt -m Part1\_1.smt} several times, we find when the number of pallets of prittles is 19, it is UNSAT. When the number is 18, it is SAT. Therefore, we conclude that the maximal number of pallets of prittles is 18.
+Applying {\tt yices-smt -m Part1\_1.smt} several times, we find when the number of pallets of prittles $P$ is 19, it is UNSAT. When the number is 18, it is SAT. Therefore, we conclude that the maximal number of pallets of prittles is 18.
 The following result is yielded within a fraction of a second:
 
 {\footnotesize
@@ -248,7 +258,7 @@ The following result is yielded within a fraction of a second:
 
 }
 \vspace{3mm}
-Here is one of the solution.
+The following table shows the solution for this specific problem.
 
 \vspace{2mm}
   \begin{center}
@@ -261,7 +271,7 @@ Here is one of the solution.
     Truck 3 & 0 & 8 & 0 & 0 & 0 \\
     Truck 4 & 0 & 0 & 4 & 2 & 1 \\
     Truck 5 & 0 & 7 & 0 & 0 & 1 \\
-    Truck 6 & 0 & 3 & 4 & 0 & 1 \\  
+    Truck 6 & 0 & 3 & 4 & 0 & 1 \\
     \hline
   \end{tabular}
 \end{center}
@@ -272,16 +282,16 @@ For this problem, we first find out the theoretically possible maximum number of
 
   $\frac{7800 \times 6 - 700\times4 - 1000\times8 - 1500\times10 - 100\times5}{800} = 25.625$
 
-Because the number of pallets is a nature number, the maximum number should not be more than 25. Therefore, we can start the debugging from $n = 25$ downwards.
+Because the number of pallets is a natural number, the maximum number should not be more than 25. Therefore, we can start the debugging from $P = 25$ downwards.
 
 \subsection*{Generalization}
 
 We generalized all the invariants except the total number of kinds of the building blocks in this problem, because most of the requirements come from the features of different building blocks, which indicates that adding more different building blocks will generate more requirements, and as a consequent, the entire formula we summarized in the end of the solution is not applicable.
 
-One more note is for the people who are interested in setting the number of trucks, $m$, larger than $10$. They need to care care about the notations of the variables $t_{ij}$. For instance, the number of pallets of building blocks labeled $1$ on the eleventh truck, $t_{11,1}$, is expressed as  $t111$ in Yices codes. This expression can also represent the number of pallets of building blocks labeled $11$ on the first truck, $t_{1,11}$. An extra symbol between the two numbers $i$ and $j$ is required to avoid this ambiguity.
+One more note is for the people who are interested in setting the number of trucks, $n$, larger than $10$. They need to take care about the notations of the variables $t_{ij}$. For instance, the number of pallets of building blocks labeled $1$ on the eleventh truck, $t_{11,1}$, is expressed as  $t111$ in Yices codes. This expression can also represent the number of pallets of building blocks labeled $11$ on the first truck, $t_{1,11}$. An extra symbol between the two numbers $i$ and $j$ is required to avoid this ambiguity.
 
-Decreasing the number of trucks is more of interest. We did some testing to figure out how many pallets of prittles can satisfy these conditions with fewer trucks. When there are five trucks in all, ten pallets of prittles can be delivered with the satisfiability of the conditions. With fewer trucks, no satisfiability is reached. Since one truck can only deliver one pallet of drupples due to the condition, the number of trucks has to be larger than the number of pallets of drupples for delivery. It can be expressed as this
-\[ \sum_{i=1}^m t_{i5}\leq m \]
+Decreasing the number of trucks is more of interest. We did some testing to figure out how many pallets of prittles can satisfy these conditions with fewer trucks. When there are five trucks in all, ten pallets of prittles can be delivered with the satisfiability of the conditions. With fewer trucks, no satisfiability is reached. Since one truck can only deliver one pallet of drupples due to the condition, the number of trucks has to be larger than the number of pallets of dupples for delivery. It can be expressed as this
+\[ \sharp pallets(5) \leq m \]
 
 \newpage
 
