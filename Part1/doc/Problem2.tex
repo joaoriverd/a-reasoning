@@ -251,9 +251,9 @@ The following picture illustrates the solution of this problem given by the tool
 \end{center}
 
 \subsection*{Remark:}
+Due to the complexity of the formulas, it is hard and time consuming to make the complete yices' code by hand. The best approach is to create a script that automatically generates the code, with this we ensure that the formulas are translated in the correct syntax removing the possibility of human mistakes.
 
-
-\subsection*{Generalization:} 
+\subsection*{Generalization:}
 We generalized our approach for any composition of a chip, some power components and regular components with known sizes to test if it is possible to obtain a fine chip design. Regardless the size of the chip and these components and the number of the components, this approach specifies two more constraints. One is the safe distance for the power components due to heat production. The other is the common touching between power components and regular components. These two constraints are derived from the characteristics of the components to apply to the chip. Different components have different characteristics, which may require different clauses to formulate. This is the limitation of our generalization. The satisfiability for a good chip design highly depends on the size of the components.
 
 
