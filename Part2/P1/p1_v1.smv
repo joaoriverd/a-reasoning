@@ -1,0 +1,81 @@
+MODULE main
+VAR
+ t : 0..320;
+ a : -100..120;
+ b : -100..120;
+ c : -100..200;
+ d : 0..200;
+ s : 0..300;
+ p : 0..3;
+INIT
+ p = 0 & a = 40 & b = 30 & c = 145 &  t = 300
+TRANS
+ case (p = 0) : (next(p) = 1 & 
+				 next(t) = t - next(d) + next(s) &
+				 next(a) = a - 29 &
+				 next(b) = b - 29 &
+				 next(c) = c - 29
+				 |
+				 next(p) = 2 & 
+				 next(t) = t - next(d) + next(s) &
+				 next(a) = a - 21 &
+				 next(b) = b - 21 &
+				 next(c) = c - 21
+				 ) & 
+ 				 d = 0; 
+ TRUE :		 
+ case (p = 1) : (next(p) = 0 & 
+				 next(t) = t - next(d) + next(s) &
+				 next(a) = a - 29 + d &
+				 next(b) = b - 29 &
+				 next(c) = c - 29
+				 |
+				 next(p) = 2 & 
+				 next(t) = t - next(d) + next(s) &
+				 next(a) = a - 17 + d &
+				 next(b) = b - 17 &
+				 next(c) = c - 17
+				 |
+				 next(p) = 3 & 
+				 next(t) = t - next(d) + next(s) &
+				 next(a) = a - 32 + d &
+				 next(b) = b - 32 &
+				 next(c) = c - 32
+				 ) & 
+				 s = 0;
+ TRUE:
+ case (p = 2) : (next(p) = 0 & 
+				 next(t) = t - next(d) + next(s) &
+				 next(a) = a - 21 &
+				 next(b) = b - 21 + d &
+				 next(c) = c - 21
+				 |
+				 next(p) = 1 & 
+				 next(t) = t - next(d) + next(s) &
+				 next(a) = a - 17 &
+				 next(b) = b - 17 + d &
+				 next(c) = c - 17
+				 |
+				 next(p) = 3 & 
+				 next(t) = t - next(d) + next(s) &
+				 next(a) = a - 37 &
+				 next(b) = b - 37 + d &
+				 next(c) = c - 37 
+				 ) & 
+				 s = 0;
+ TRUE :
+ case (p = 3) : (next(p) = 1 & 
+				 next(t) = t - next(d) + next(s) &
+				 next(a) = a - 32 &
+				 next(b) = b - 32 &
+				 next(c) = c - 32 + d
+				 |
+				 next(p) = 2 & 
+				 next(t) = t - next(d) + next(s) &
+				 next(a) = a - 37 &
+				 next(b) = b - 37 &
+				 next(c) = c - 37 + d
+				 ) & 
+				 s = 0;
+ TRUE : next(p) = p; esac; esac; esac; esac;
+LTLSPEC F (a < 0 | b < 0 | c < 0)

@@ -1,0 +1,80 @@
+MODULE main
+VAR
+ t : 0..320;
+ a : -10..120;
+ b : -10..120;
+ c : -10..200;
+ d : 0..200;
+ p : 0..3;
+INIT
+ p = 0 & a = 40 & b = 30 & c = 145
+TRANS
+ case (p = 0) : ((next(p) = 1 & 
+				 next(a) = a - 29 &
+				 next(b) = b - 29 &
+				 next(c) = c - 29 &
+				 next(t) = t - next(d))
+				 |
+				 (next(p) = 2 & 
+				 next(a) = a - 21 &
+				 next(b) = b - 21 &
+				 next(c) = c - 21 &
+				 next(t) = t - next(d))
+				 ) & 
+ 				 d = 0 &
+				 t = 320; 
+ TRUE :		 
+ case (p = 1) : (
+				(next(p) = 0 & 
+				 next(a) = a - 29 + d &
+				 next(b) = b - 29 &
+				 next(c) = c - 29)
+				 |
+				 (next(p) = 2 &
+				 next(a) = a - 17 + d &
+				 next(b) = b - 17 &
+				 next(c) = c - 17 &
+				 next(t) = t - next(d))
+				 |
+				 (next(p) = 3 & 
+				 next(a) = a - 32 + d &
+				 next(b) = b - 32 &
+				 next(c) = c - 32 &
+				 next(t) = t - next(d))
+				 )& 
+ 				 d <= 120 - a;
+ TRUE:
+ case (p = 2) : ((next(p) = 0 & 
+				 next(a) = a - 21 &
+				 next(b) = b - 21 + d &
+				 next(c) = c - 21)
+				 |
+				 (next(p) = 1 & 
+				 next(a) = a - 17 &
+				 next(b) = b - 17 + d &
+				 next(c) = c - 17 &
+				 next(t) = t - next(d))
+				 |
+				 (next(p) = 3 & 
+				 next(a) = a - 37 &
+				 next(b) = b - 37 + d &
+				 next(c) = c - 37 &
+				 next(t) = t - next(d))
+				 )& 
+ 				 d <= 120 - b;
+ TRUE :
+ case (p = 3) : ((next(p) = 1 & 
+				 next(a) = a - 32 &
+				 next(b) = b - 32 &
+				 next(c) = c - 32 + d &
+				 next(t) = t - next(d))
+				 |
+				 (next(p) = 2 & 
+				 next(a) = a - 37 &
+				 next(b) = b - 37 &
+				 next(c) = c - 37 + d &
+				 next(t) = t - next(d))
+				 )& 
+ 				 d <= 200 - c;
+ TRUE : next(p) = p; esac; esac; esac; esac;
+LTLSPEC F (a < 0 | b < 0 | c < 0)
