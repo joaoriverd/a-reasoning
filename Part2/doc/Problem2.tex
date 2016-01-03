@@ -1,0 +1,248 @@
+\section*{Problem 2}
+Three bottles can hold 144, 72 and 16 units (say, centiliters), respectively. Initially the first one contains 3 units of water, the others are empty. The following actions may be performed any number of times:
+
+\begin{itemize}
+  \item One of the bottles is fully filled, at some water tap.
+  \item One of the bottles is emptied.
+  \item The content of one bottle is poured into another one. If it fits, then the full content is poured, otherwise the pouring stops when the other bottle is full.
+\end{itemize}
+
+\begin{description}
+  \item[a)] Determine whether it is possible to arrive at a situation in which the first bottle contains 8 units and the second one contains 11 units. If so, give a scenario reaching this situation.
+  \item[b)] Do the same for the variant in which the second bottle is replaced by a bottle that can hold 80 units, and all the rest remains the same.
+  \item[c)] Do the same for the variant in which the third bottle is replaced by a bottle that can hold 28 units, and all the rest (including the capacity of 72 of the second bottle) remains the same.
+\end{description}
+
+
+\subsection*{Solution:}
+
+We generalize this problem for $n$ number of bottles. First we introduce $n \times (m + 1)$ integer variables of the type $a_{ij}$ for $i = 1,...,n$ and $j = 0,...,m$ to represent the content of all bottles, where $m$ is the total number of actions that are being performed. We also define $max(i)$ as the maximum amount of water that bottle $i$ can hold, and $A_i$ as the amount of water that bottle $i$ initially contains.
+
+First, we define the formula that expresses the boundaries of each variable. In other words, the minimum and maximum amount of water that a bottle can hold through all the steps, this is bounded by zero (empty bottle) and $max(i)$ (fully filled bottle):
+
+\[\bigwedge_{j=0}^m \bigwedge_{i=1}^n 0 \leq a_{ij} \leq max(i).\]
+
+The problem specifies that some bottles initially contain some amount of water. The following formula expresses this condition:
+
+\[\bigwedge_{i=1}^n a_{i0} = A_{i}.\]
+
+Next we express the steps or actions that can be performed. For the sake of simplicity we define that for all steps $j$ it is only possible to perform one action at a time. Hence, we have the following formula:
+
+\[\bigwedge_{j=0}^m Action1 \vee Action2 \vee Action3.\]
+
+Now we construct the formulas that express each of the actions. For $action \; 1$ it is required that after one step, one of the bottles is fully filled and the other bottles remain with the same amount of water. The formula that expresses this is
+
+\[\bigvee_{i=1}^n (a_{ij+1} = max(i) \wedge \bigwedge_{1 \leq k \leq n: k \neq i} a_{kj+1} = a_{kj}).\]
+
+Similarly, the second action requires to empty one bottle after one step. We construct the formula for $action$ 2 as follow:
+
+\[\bigvee_{i=1}^n (a_{ij+1} = 0 \wedge \bigwedge_{1 \leq k \leq n: k \neq i} a_{kj+1} = a_{kj}).\]
+
+Finally, $action$ 3 specifies that the content of one bottle is poured into another one. If it fits, then the full content is poured, otherwise the pouring stops when the other bottle is full.
+
+\[\bigvee_{i=1}^n \bigvee_{1 \leq k \leq n: k \neq i} ((a_{ij} \leq max(k) - a_{kj}) \rightarrow (a_{ij+1}=0 \;\wedge\; a_{kj+1} = a_{kj} + a_{ij} \; \wedge\]
+\[\qquad \qquad \qquad \qquad \qquad \qquad\bigwedge_{1 \leq l \leq n: l \neq i \wedge l \neq k} a_{lj+1} = a_{lj})\; \wedge \]
+
+\[\qquad \qquad \qquad \qquad \qquad \sim(a_{ij} \leq max(k) - a_{kj}) \rightarrow (a_{ij+1}= a_{ij} + a_{kj} - max(k) \;\wedge\; a_{kj+1} = max(k) \;\wedge \]
+
+\[\qquad \qquad \qquad \qquad \qquad \qquad\bigwedge_{1 \leq l \leq n: l \neq i \wedge l \neq k} a_{lj+1} = a_{lj})) .\]
+
+At first sight, this big formula may seem hard to understand, but it is very straightforward. It basically states that you can select a bottle $i$ to be poured into another bottle $k$ ($k \neq i$), if it fits ($a_{ij} \leq max(k) - a_{kj}$) then the content of $i$ will be added to the content of $k$ in the next step ($a_{kj+1} = a_{kj} + a_{ij}$), whereas the content of bottle $i$ will be empty. The other variables will remain unchange. If the content does not fit, then the bottle $k$ will be filled to the top ($a_{kj+1} = max(k)$), while in bottle $i$ will remain the amount of water that does not fit into $k$ this is $a_{ij+1}= a_{ij} + a_{kj} - max(k)$.
+
+The total formula now consists of the conjunction of all these ingredients.
+
+\[\bigwedge_{j=0}^m \bigwedge_{i=1}^n 0 \leq a_{ij} \leq max(i) \;\wedge\]
+
+\[\bigwedge_{i=1}^n a_{i0} = A_{i} \;\wedge\]
+
+\[\bigwedge_{j=0}^m Action1 \vee Action2 \vee Action3.\]
+
+The complete formula expressed in NuSMV syntax choosing $n = 3$, $max(1) = 144$, $max(2)=72$, $max(3)=16$, $A_1 = 3$ and $A_2=A_3=0$ is as follow:
+
+\vspace{3mm}
+\fontfamily{lmtt}\selectfont
+{\footnotesize
+\noindent
+MODULE main\newline
+VAR\newline
+ a1 : 0..144;\newline
+ a2 : 0..72;\newline
+ a3 : 0..16;\newline
+INIT\newline
+ a1 = 3 \& a2 = 0 \& a3 = 0\newline
+TRANS\newline
+ next(a1) = 144 \& next(a2) = a2 \& next(a3) = a3 | \newline
+ next(a1) = a1  \& next(a2) = 72 \& next(a3) = a3 | \newline
+ next(a1) = a1  \& next(a2) = a2 \& next(a3) = 16 |\newline
+ next(a1) =  0  \& next(a2) = a2 \& next(a3) = a3 | \newline
+ next(a1) = a1  \& next(a2) =  0 \& next(a3) = a3 | \newline
+ next(a1) = a1  \& next(a2) = a2 \& next(a3) =  0 |\newline
+ \newline
+ case (a1 <= (72 - a2)) : next(a1) = 0 \&\newline
+						  next(a2) = a2 + a1 \& \newline
+						  next(a3) = a3;\newline
+ TRUE : next(a1) = a1 - (72 - a2) \&\newline
+		next(a2) = 72 \&\newline
+		next(a3) = a3; \newline
+ \newline
+ esac |\newline
+ \newline
+ case (a1 <= (16 - a3)) : next(a1) = 0 \&\newline
+						  next(a2) = a2 \& \newline
+						  next(a3) = a3 + a1;\newline
+ TRUE : next(a1) = a1 - (16 - a3) \&\newline
+		next(a2) = a2 \&\newline
+		next(a3) = 16; \newline
+ \newline
+ esac |\newline
+ \newline
+ case (a2 <= (144 - a1)) : next(a1) = a2 + a1 \&\newline
+						   next(a2) = 0 \& \newline
+						   next(a3) = a3;\newline
+ TRUE : next(a1) = 144 \&\newline
+		next(a2) = a2 - (144 - a1) \&\newline
+		next(a3) = a3; \newline
+ \newline
+ esac |\newline
+$\cdots \cdots$
+\newline
+\newline
+LTLSPEC G !(a1 = 8 \& a2 = 11)\newline
+}
+\fontfamily{helvet}\selectfont
+\vspace{3mm}
+
+Now we try to find a solution for each interrogant of the original problem:
+
+\begin{description}
+  \item[a)] Determine whether it is possible to arrive at a situation in which the first bottle contains 8 units and the second one contains 11 units. If so, give a scenario reaching this situation.
+
+  In order to find a solution for this, we introduce the following LTL (Linear Temporal Logic) specification to the NuSMV code:
+
+  \vspace{2mm}
+\fontfamily{lmtt}\selectfont
+{\footnotesize
+\noindent
+LTLSPEC G !(a1 = 8 \& a2 = 11)
+}
+\fontfamily{helvet}\selectfont
+\vspace{2mm}
+
+  This states that globally the formula $a_1 =8 \wedge a_2 = 2$ does not hold throughout all the possible reachable states. If it is possible to reach that condition then NuSMV will find a counterexample. After applying {\tt NuSMV part$2\_2a$.smv}, it yields the following result:
+
+    \vspace{2mm}
+\fontfamily{lmtt}\selectfont
+{\footnotesize
+\noindent
+-- specification  G !(a1 = 8 \& a2 = 11)  is false\newline
+-- as demonstrated by the following execution sequence\newline
+Trace Description: LTL Counterexample\newline
+Trace Type: Counterexample\newline
+  -> State: 1.1 <-\newline
+    a1 = 3\newline
+    a2 = 0\newline
+    a3 = 0\newline
+  -> State: 1.2 <-\newline
+    a2 = 72\newline
+  -> State: 1.3 <-\newline
+    a1 = 75\newline
+    a2 = 0\newline
+  $\cdots \cdots$
+  \newline
+  -> State: 1.15 <-\newline
+    a1 = 0\newline
+    a2 = 11\newline
+  -> State: 1.16 <-\newline
+    a1 = 8\newline
+    a3 = 0\newline
+  -- Loop starts here\newline
+  -> State: 1.17 <-\newline
+    a1 = 19\newline
+    a2 = 0\newline
+  -> State: 1.18 <-
+}
+\fontfamily{helvet}\selectfont
+  \vspace{2mm}
+
+  We can conclude from this result that it is possible to perform the actions to fill, to empty or to pour the content of the bottles in such a way that we reach the condition where the first bottle contains 8 units and the second one contains 11 units. This scenario is depicted in the following table:
+
+  \begin{center}
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+  \hline
+  $variables/state$ & 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 & 12 & 13 & 14 & 15  \\
+  \hline
+  Action &  & 1  & 3 & 3 & 3 & 3 & 3 & 3 & 3 & 1 & 3 & 3 & 3 & 2 & 3  & 3  \\
+  Content bottle 1 ($a_1$) & 3 & 3  & 75 & 56 & 56 & 43 & 43 & 27 & 27 & 27 & 27 & 11 & 11 & 11 & 0  & \textbf{8}  \\
+  Content bottle 2 ($a_2$) & 0 & 72 & 0  & 0  & 16 & 16 & 32 & 32 & 48 & 48 & 64 & 64 & 72 & 0  & 11 & \textbf{11} \\
+  Content bottle 3 ($a_3$) & 0 & 0  & 0  & 16 & 0  & 16 & 0  & 16 & 0  & 16 & 0  & 16 & 8  & 8  & 8  & 0  \\
+  \hline
+\end{tabular}
+\end{center}
+
+  \item[b)] Do the same for the variant in which the second bottle is replaced by a bottle that can hold 80 units, and all the rest remains the same.
+
+  For this case, we generate the NuSMV code choosing $max(2)=80$. Applying {\tt NuSMV part$2\_2b$.smv}, it yields the following result:
+
+      \vspace{2mm}
+\fontfamily{lmtt}\selectfont
+{\footnotesize
+\noindent
+-- specification  G !(a1 = 8 \& a2 = 11)  is true
+}
+\fontfamily{helvet}\selectfont
+  \vspace{2mm}
+
+  It is not possible to reach an state where the condition $a1 = 8 \wedge a2 = 11$ holds, hence its impossible to arrive in a situation where the first bottle contains 8 units of water and the second one 11 units.
+
+  \item[c)] Do the same for the variant in which the third bottle is replaced by a bottle that can hold 28 units, and all the rest (including the capacity of 72 of the second bottle) remains the same.
+
+  Similarly to previous cases, we generate the NuSMV code choosing now $max(3)=28$. We apply {\tt NuSMV part$2\_2c$.smv} yielding the following result:
+
+      \vspace{2mm}
+\fontfamily{lmtt}\selectfont
+{\footnotesize
+\noindent
+-- specification  G !(a1 = 8 \& a2 = 11)  is false\newline
+-- as demonstrated by the following execution sequence\newline
+Trace Description: LTL Counterexample\newline
+Trace Type: Counterexample\newline
+  -> State: 1.1 <-\newline
+    a1 = 3\newline
+    a2 = 0\newline
+    a3 = 0\newline
+  -> State: 1.2 <-\newline
+    a1 = 0\newline
+    a2 = 3\newline
+  -> State: 1.3 <-\newline
+    a1 = 144\newline
+  $\cdots \cdots$
+  \newline
+  -> State: 1.25 <-\newline
+    a2 = 11\newline
+    a3 = 0\newline
+  -> State: 1.26 <-\newline
+    a1 = 36\newline
+    a3 = 28\newline
+  -> State: 1.27 <-\newline
+    a3 = 0\newline
+  -> State: 1.28 <-\newline
+    a1 = 8\newline
+    a3 = 28\newline
+  -- Loop starts here\newline
+  -> State: 1.29 <-\newline
+    a1 = 19\newline
+    a2 = 0\newline
+  -> State: 1.30 <-\newline
+}
+\fontfamily{helvet}\selectfont
+\end{description}
+The specification is false and NuSMV gives a counterexample where the condition can be reached. We conclude that for this case it is possible to arrive to the situation specified by the problem.
+
+\subsection*{Remark:}
+
+
+\subsection*{Generalization:}
+
+
+
+

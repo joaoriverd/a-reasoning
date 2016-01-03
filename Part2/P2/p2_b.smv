@@ -1,0 +1,70 @@
+MODULE main
+VAR
+ a1 : 0..144;
+ a2 : 0..80;
+ a3 : 0..16;
+INIT
+ a1 = 3 & a2 = 0 & a3 = 0
+TRANS
+ next(a1) = 144 & next(a2) = a2 & next(a3) = a3 | 
+ next(a1) = a1  & next(a2) = 80 & next(a3) = a3 | 
+ next(a1) = a1  & next(a2) = a2 & next(a3) = 16 |
+ next(a1) =  0  & next(a2) = a2 & next(a3) = a3 | 
+ next(a1) = a1  & next(a2) =  0 & next(a3) = a3 | 
+ next(a1) = a1  & next(a2) = a2 & next(a3) =  0 |
+ 
+ case (a1 <= (80 - a2)) : next(a1) = 0 &
+						  next(a2) = a2 + a1 & 
+						  next(a3) = a3;
+ TRUE : next(a1) = a1 - (80 - a2) &
+		next(a2) = 80 &
+		next(a3) = a3; 
+ 
+ esac |
+ 
+ case (a1 <= (16 - a3)) : next(a1) = 0 &
+						  next(a2) = a2 & 
+						  next(a3) = a3 + a1;
+ TRUE : next(a1) = a1 - (16 - a3) &
+		next(a2) = a2 &
+		next(a3) = 16; 
+ 
+ esac |
+ 
+ case (a2 <= (144 - a1)) : next(a1) = a2 + a1 &
+						   next(a2) = 0 & 
+						   next(a3) = a3;
+ TRUE : next(a1) = 144 &
+		next(a2) = a2 - (144 - a1) &
+		next(a3) = a3; 
+ 
+ esac |
+ 
+ case (a2 <= (16 - a3)) : next(a1) = a1 &
+						  next(a2) = 0 & 
+						  next(a3) = a3 + a2;
+ TRUE : next(a1) = a1 &
+		next(a2) = a2 - (16 - a3) &
+		next(a3) = 16; 
+ 
+ esac |
+ 
+ case (a3 <= (144 - a1)) : next(a1) = a3 + a1 &
+						   next(a2) = a2 & 
+						   next(a3) = 0;
+ TRUE : next(a1) = 144 &
+		next(a2) = a2  &
+		next(a3) = a3 - (144 - a1); 
+ 
+ esac |
+ 
+ case (a3 <= (80 - a2)) : next(a1) = a1 &
+						  next(a2) = a2 + a3 & 
+						  next(a3) = 0;
+ TRUE : next(a1) = a1 &
+		next(a2) = 80 &
+		next(a3) = a3 - (80 - a2); 
+ 
+ esac ;
+
+LTLSPEC G !(a1 = 8 & a2 = 11)

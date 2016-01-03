@@ -1,0 +1,24 @@
+MODULE main
+VAR
+ t : 0..19;
+ ta : -10..50;
+ a : -10..50;
+ d : 0..100;
+ s : 0..25;
+ p : boolean;
+INIT
+ !p & a = 1 & ta = 1 & t = 19
+TRANS
+ case (ta < 0) : next(ta) = ta;
+ TRUE:
+ case !p : next(p) = !p & 
+		   next(t) = t - next(d) &
+		   next(ta) = a - 10 &
+		   next(a) = a - 10 + next(d);
+		   
+ TRUE :    next(p) = !p & 
+		   next(t) = t + next(s) &
+		   next(ta) = a - 10 &
+		   next(a) = a - 10; 
+ TRUE : next(p) = p; esac; esac;
+LTLSPEC F (ta < 0)
