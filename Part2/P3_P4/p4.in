@@ -1,0 +1,51 @@
+formulas(assumptions).
+
+%edge definition 
+
+red(a,c) | red(a,e) |red(a,g).
+
+red(b,f). red(b,i). red(c,h).
+
+yellow(g,d) | yellow(g,f). 
+
+yellow(e,h).
+
+blue(d,a) | blue(d,b).
+
+blue(c,g). blue(d,i). 
+
+blue(g,h).
+
+red(x,y) -> red(y,x).
+
+yellow(x,y) -> yellow(y,x).
+
+blue(x,y) -> blue(y,x).
+
+%path definition
+
+red(x,y) -> redpath(x,y).
+
+yellow(x,y) -> ypath(x,y).
+
+blue(x,y) -> bluepath(x,y).
+
+red(x,y) & bluepath(y,z) -> redpath(x,z).
+
+red(x,y) & ypath(y,z) -> redpath(x,z).
+
+yellow(x,y) & red(y,z) -> ypath(x,z).
+
+yellow(x,y) & bluepath(y,z) -> ypath(x,z).
+
+blue(x,y) & redpath(y,z) -> bluepath(x,z).
+
+blue(x,y) & ypath(y,z) -> bluepath(x,z).
+
+end_of_list.
+
+formulas(goals).
+
+redpath(a,b) | bluepath(a,b) | ypath(a,b).
+
+end_of_list.

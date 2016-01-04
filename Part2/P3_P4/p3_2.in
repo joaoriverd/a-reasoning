@@ -1,0 +1,19 @@
+formulas(assumptions).
+
+% the first three assumptions are closed terms rewriting, 
+% personally added according to slide 267
+R(a(x, u), a(u, x)).
+R(x, y) -> R(a(x, z), a(y, z)).
+R(x, y) -> R(a(z, x), a(z, y)).
+
+% the given single rule
+RR(a(x, a(y, a(z, u))), a(y, a(z, a(x, u)))).
+
+
+end_of_list.
+
+formulas(goals).
+
+RR(a(b, a(c, a(d, a(e, a(f, a(b, g)))))), a(b, a(d, a(c, a(e, a(f, a(b, g))))))).
+
+end_of_list.

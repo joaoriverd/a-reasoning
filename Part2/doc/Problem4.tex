@@ -1,9 +1,91 @@
 \section*{Problem 4}
 
+Give a precise description of a non-trivial problem of your own choice, and encode this and solve it by one of the given programs.
+
+\subsubsection*{self-defined problem:}
+
+In an undirected network the edges are colored red, blue and yellow, and the following is given:
+
+\begin{itemize}
+  \item From $A$ there is a red edge to either $C, E$ or $G$.
+  \item There are red edges $BF, BI, CH, DJ, EI, GI$ and $IJ$.
+  \item From $G$ there is a yellow edge to either $D$ or $F$.
+  \item There is a yellow edge $EG$.
+  \item From $D$ there is a blue edge to either $A$ or $B$.
+  \item There are blue edges $CG, DI, EH, FJ$ and $GH$.
+\end{itemize}
+prove that a path from $A$ to $B$ exists in which no two consecutive edges
+are of the same color.
+
 \vspace{4mm}
 
 \subsection*{Solution:}
 
+We use $Prover9$ to solve the problem.
+
+Edge definition: A red edge from $x$ to $y$ is denoted as $red(x,y)$. A yellow edge from $x$ to $y$ is denoted as $yellow(x,y)$. A blue edge from $x$ to $y$ is denoted as $blue(x,y)$. Since it is an undirected network, $red(x,y) = red(y,x)$, $yellow(x,y) = yellow(y,x)$ and $blue(x,y) = blue(y,x)$.
+
+Path definition: A path can be an edge or a sequential connected edges. A path starting with a red edge is called as $redpath$. Similarly, there are $bluepath$ and $ypath$. Particularly, a $redpath$ can be a single red edge or a red edge followed by a $bluepath$ or a $ypath$. Likewise, a $bluepath$ can be a single blue edge or a blue edge followed by a $redpath$ or a $ypath$, and a $ypath$ can be a single yellow edge or a yellow edge followed by a $redpath$ or a $bluepath$. In this way we can make sure that the paths, which are $redpath$, $bluepath$ or $ypath$, will not have two consecutive edges in the same color.
+
+Therefore, our $Prover9$ codes are as follows.
+
+{\footnotesize
+
+{\tt formulas(assumptions).}
+
+{\tt \% edge definition }
+
+{\tt red(a,c) | red(a,e) |red(a,g).}
+
+{\tt red(b,f). red(b,i). red(c,h).}
+
+{\tt yellow(g,d) | yellow(g,f).}
+
+{\tt yellow(e,h).}
+
+{\tt blue(d,a) | blue(d,b).}
+
+{\tt blue(c,g). blue(d,i).}
+
+{\tt blue(g,h).}
+
+{\tt red(x,y) -> red(y,x).}
+
+{\tt yellow(x,y) -> yellow(y,x).}
+
+{\tt blue(x,y) -> blue(y,x).}
+
+{\tt \% path definition}
+
+{\tt red(x,y) -> redpath(x,y).}
+
+{\tt yellow(x,y) -> ypath(x,y).}
+
+{\tt blue(x,y) -> bluepath(x,y).}
+
+{\tt red(x,y) \& bluepath(y,z) -> redpath(x,z).}
+
+{\tt red(x,y) \& ypath(y,z) -> redpath(x,z).}
+
+{\tt yellow(x,y) \& red(y,z) -> ypath(x,z).}
+
+{\tt yellow(x,y) \& bluepath(y,z) -> ypath(x,z).}
+
+{\tt blue(x,y) \& redpath(y,z) -> bluepath(x,z).}
+
+{\tt blue(x,y) \& ypath(y,z) -> bluepath(x,z).}
+
+{\tt end\_of\_list.}
+
+{\tt formulas(goals).}
+
+{\tt redpath(a,b) | bluepath(a,b) | ypath(a,b).}
+
+{\tt end\_of\_list.}
+
+}
+
+After applying $Prover9$, the existence that a path from $A$ to $B$ has no two consecutive edges in the same color is proved to be true.
 
 \subsection*{Remark:}
 

@@ -1,9 +1,95 @@
 \section*{Problem 3}
 
+The goal of this problem is to exploit the power of the recommended tools rather than elaborating the questions by hand
+
+\begin{description}
+  \item[(a)] In mathematics, a \emph{group} is defined to be a set $G$ with an element $I \epsilon G$, a binary operator $\ast$ and a unary operator \emph{inv} satisfying
+      \begin{center}
+      $ x \ast(y \ast z)=(x\ast y) \ast z, x \ast I = x $ and $ x \ast inv(x) = I, $
+      \end{center}
+      for all $x, y, z \epsilon G$. Determine whether in every group each of the four properties
+      \[  I \ast x = x, inv(inv(x)) = x, inv(x) \ast x = I and x \ast y = y \ast x  \]
+      holds for all $x, y \epsilon G$. If a property does not hold, determine the size of the smallest finite group for which it does not hold.
+  \item[(b)] A term rewrite system consists of the single rule
+  \[ a(x, a(y, a(z, u))) \rightarrow a(y, a(z, a(x, u)))), \]
+
+  in which a is a binary symbol and $x, y, z, u$ are variables. Moreover, there are constants $b, c, d, e, f, g$. Determine whether $c$ and $d$ may be swapped in $a(b, a(c, a(d, a(e, a(f, a(b, g))))))$ by rewriting, that is, a(b, a(c, a(d, a(e, a(f, a(b, g)))))) rewrites in a finite number of steps to $a(b, a(d, a(c, a(e, a(f, a(b, g))))))$.
+
+\end{description}
+
 \vspace{4mm}
 
 \subsection*{Solution:}
 
+\begin{description}
+  \item[(a)] In this problem, three assumptions are given. So we use $Prover9$ to prove the four properties. The codes are as follows. Here we denote \emph{inv(x)} as $x'$ for the sake of simplicity.
+
+{\footnotesize
+
+{\tt formulas(assumptions).}
+
+{\tt \% Group definition}
+
+{\tt x * I = x.}
+
+{\tt x * x' = I.}
+
+{\tt x * (y * z) = (x * y) * z.}
+
+{\tt end\_of\_list.}
+
+{\tt formulas(goals).}
+
+{\tt I * x = x.}
+
+{\tt x'' = x.}
+
+{\tt x' * x = I.}
+
+{\tt x * y = y * x.}
+
+{\tt end\_of\_list.}
+
+}
+  After applying the file to $Prover9$, we found that the first 3 properties are proved, but the fourth one is failed. In order to determine the size of the smallest finite group for which it does not hold, we apply the same file to $mace4$ instead of $Prover9$ to find a smallest noncommutative group by finding the conterexample to the statement that all groups are commutative. $mace4$ shows that the size is 6.
+
+  \item[(b)] To determine the possibility of the rewriting in a finite number of steps, we use $mace4$ to find a smallest number of swapping steps by finding the conterexample to the statement that $c$ and $d$ may not swap.
+
+  This problem gives only a single rule.  Then the first step is to fulfill the assumptions with some closed terms rewriting according to the slide handout, page267. They are
+
+      \[ R(a(x, u), a(u, x)). \]
+      \[ R(x, y) -> R(a(x, z), a(y, z)). \]
+      \[ R(x, y) -> R(a(z, x), a(z, y)).\]
+
+      Then the final $mace4$ codes are
+
+{\footnotesize
+
+{\tt formulas(assumptions).}
+
+{\tt R(a(x, u), a(u, x)).}
+
+{\tt R(x, y) -> R(a(x, z), a(y, z)).}
+
+{\tt R(x, y) -> R(a(z, x), a(z, y)).}
+
+{\tt \% the given single rule}
+
+{\tt RR(a(x, a(y, a(z, u))), a(y, a(z, a(x, u)))).}
+
+{\tt end\_of\_list.}
+
+{\tt formulas(goals).}
+
+{\tt RR(a(b, a(c, a(d, a(e, a(f, a(b, g)))))), a(b, a(d, a(c, a(e, a(f, a(b, g))))))).}
+
+{\tt end\_of\_list.  }
+
+  }
+
+  After running $mace4$, we found that the smallest number of swapping steps is 3. So $c$ and $d$ can be swapped in $a(b, a(c, a(d, a(e, a(f, a(b, g))))))$ by rewriting in 3 steps to $a(b, a(d, a(c, a(e, a(f, a(b, g))))))$.
+
+\end{description}
 
 \subsection*{Remark:}
 

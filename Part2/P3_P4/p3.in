@@ -1,0 +1,19 @@
+formulas(assumptions).
+
+% Group definition
+x * I = x					# label(right_identity).
+x * x' = I					# label(right_inverse).
+x * (y * z) = (x * y) * z   # label(associativity).
+
+end_of_list.
+
+formulas(goals).
+
+% the first three goals are proved by prover9, but the 4th not.
+% a model is found for the 4th by mace4 that the size of the smallest finite group is 6.
+%I * x = x.
+%x'' = x.
+%x' * x = I.
+x * y = y * x 				# label(commutativity).
+
+end_of_list.
