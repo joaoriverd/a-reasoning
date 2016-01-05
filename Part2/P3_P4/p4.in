@@ -2,16 +2,23 @@ formulas(assumptions).
 
 %edge definition 
 
+% JR: The problem says that only one is allowed "From A there is a red edge to either C, E or G"
+%     as here we have the formula with "or" it makes me think that it is also possible to have a red
+%     edge to all options, although I'm not sure of this.
 red(a,c) | red(a,e) |red(a,g).
 
+% JR: I think some formulas are missing
 red(b,f). red(b,i). red(c,h).
 
+% JR: same as first comment
 yellow(g,d) | yellow(g,f). 
 
 yellow(e,h).
 
+% JR: same as first commet
 blue(d,a) | blue(d,b).
 
+% JR: I think some formulas are missing
 blue(c,g). blue(d,i). 
 
 blue(g,h).
