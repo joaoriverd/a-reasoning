@@ -3,19 +3,19 @@
 The goal of this problem is to exploit the power of the recommended tools rather than elaborating the questions by hand
 
 \begin{description}
-  \item[(a)] In mathematics, a \emph{group} is defined to be a set $G$ with an element $I \epsilon G$, a binary operator $\ast$ and a unary operator \emph{inv} satisfying
+  \item[(a)] In mathematics, a \emph{group} is defined to be a set $G$ with an element $I \in G$, a binary operator $\ast$ and a unary operator \emph{inv} satisfying
       \begin{center}
       $ x \ast(y \ast z)=(x\ast y) \ast z, x \ast I = x $ and $ x \ast inv(x) = I, $
       \end{center}
-      for all $x, y, z \epsilon G$. Determine whether in every group each of the four properties
+      for all $x, y, z \in G$. Determine whether in every group each of the four properties
       \begin{center}
       $I \ast x = x, inv(inv(x)) = x, inv(x) \ast x = I $ and $ x \ast y = y \ast x $
       \end{center}
-      holds for all $x, y \epsilon G$. If a property does not hold, determine the size of the smallest finite group for which it does not hold.
+      holds for all $x, y \in G$. If a property does not hold, determine the size of the smallest finite group for which it does not hold.
   \item[(b)] A term rewrite system consists of the single rule
   \[ a(x, a(y, a(z, u))) \rightarrow a(y, a(z, a(x, u)))), \]
 
-  in which a is a binary symbol and $x, y, z, u$ are variables. Moreover, there are constants $b, c, d, e, f, g$. Determine whether $c$ and $d$ may be swapped in $a(b, a(c, a(d, a(e, a(f, a(b, g))))))$ by rewriting, that is, a(b, a(c, a(d, a(e, a(f, a(b, g)))))) rewrites in a finite number of steps to $a(b, a(d, a(c, a(e, a(f, a(b, g))))))$.
+  in which $a$ is a binary symbol and $x, y, z, u$ are variables. Moreover, there are constants $b, c, d, e, f, g$. Determine whether $c$ and $d$ may be swapped in $a(b, a(c, a(d, a(e, a(f, a(b, g))))))$ by rewriting, that is, $a(b, a(c, a(d, a(e, a(f, a(b, g))))))$ rewrites in a finite number of steps to $a(b, a(d, a(c, a(e, a(f, a(b, g))))))$.
 
 \end{description}
 
@@ -24,9 +24,9 @@ The goal of this problem is to exploit the power of the recommended tools rather
 \subsection*{Solution:}
 
 \begin{description}
-  \item[(a)] In this problem, three assumptions are given. So we use $Prover9$ to prove the four properties. The codes are as follows. Here we denote \emph{inv(x)} as $x'$ for the sake of simplicity.
-      
-\vspace{2mm}
+  \item[(a)] In this problem, three assumptions are given. So we use {\tt Prover9} to prove the four properties straightforwardly. The codes are as follows. Here we denote \emph{inv(x)} as $x'$ for the sake of simplicity.
+
+\vspace{3mm}
 
 {\footnotesize
 
@@ -58,10 +58,10 @@ The goal of this problem is to exploit the power of the recommended tools rather
 
 \vspace{2mm}
 
-  After applying {\tt prover9 -f part2\_3a.in}, we found that the first 3 properties are proved, but the fourth one is failed. In order to determine the size of the smallest finite group for which it does not hold, we apply {\tt mace4 part$2\_3a$.in} to find the smallest noncommutative group by finding the conterexample to the statement that all groups are commutative. {\tt mace4} exits with 1 model below.
-  
-\vspace{2mm}
-  
+  After applying {\tt prover9 -f part2\_3a.in}, we found that the first 3 properties are proved, but the fourth one, which implies the property of commutativity, is failed. In order to determine the size of the smallest finite group for which it does not hold, we apply {\tt mace4 part$2\_3a$.in} to find the smallest noncommutative group by finding the conterexample to the statement that all groups are commutative. {\tt mace4} exits with 1 model. The model is as follows.
+
+\vspace{3mm}
+
 {\tt ============================== DOMAIN SIZE 6 =========================}
 
 {\tt ============================== MODEL =================================}
@@ -93,34 +93,42 @@ The goal of this problem is to exploit the power of the recommended tools rather
 {\tt ]).}
 
 {\tt ============================== end of model ==========================}
-  
+
 \vspace{2mm}
 
-Therefore, {\tt mace4} determines that the size of the smallest finite group, for which $ x \ast y = y \ast x $ does not hold, is 6.
+Therefore, {\tt mace4} proved that the size of the smallest finite group, for which $ x \ast y = y \ast x $ does not hold, is 6.
 
-  \item[(b)] To determine the possibility of the rewriting in a finite number of steps, we use $mace4$ to find a smallest number of swapping steps by finding the conterexample to the statement that $c$ and $d$ may not swap.
+  \item[(b)] To determine the possibility of the rewriting in a finite number of steps, we use {\tt mace4} to find the smallest number of swapping steps by finding the conterexample to the statement that $c$ and $d$ may not swap.
 
-  This problem gives only a single rule.  Then the first step is to fulfill the assumptions with some closed terms rewriting according to the slide handout, page267. They are
+  This problem gives only a single rewriting rule, denoted as $R$. So we have \[ a(x, a(y, a(z, u))) \rightarrow_{R} a(y, a(z, a(x, u)))), \]
+  Here $R$ means single rewrite step.
 
-      \[ R(a(x, u), a(u, x)). \]
-      \[ R(x, y) \rightarrow R(a(x, z), a(y, z)). \]
-      \[ R(x, y) \rightarrow R(a(z, x), a(z, y)).\]
+  The rewriting terms are the closed terms composed from the constants $b, c, d, e, f, g$. We want to show that
+  \[ a(b, a(c, a(d, a(e, a(f, a(b, g)))))) \rightarrow_{RR} a(b, a(d, a(c, a(e, a(f, a(b, g)))))). \]
+  Here $RR$ means zero or more rewrite steps.
 
-      Then the final $mace4$ codes are
+
+      %\[ R(a(x, u), a(u, x)). \]
+      %\[ R(x, y) \rightarrow R(a(x, z), a(y, z)). \]
+      %\[ R(x, y) \rightarrow R(a(z, x), a(z, y)).\]
+
+      Then the final {\tt mace4} codes are
+
+\vspace{2mm}
 
 {\footnotesize
 
 {\tt formulas(assumptions).}
 
-{\tt R(a(x, u), a(u, x)).}
+%{\tt R(a(x, u), a(u, x)).}
 
-{\tt R(x, y) -> R(a(x, z), a(y, z)).}
+%{\tt R(x, y) -> R(a(x, z), a(y, z)).}
 
-{\tt R(x, y) -> R(a(z, x), a(z, y)).}
+%{\tt R(x, y) -> R(a(z, x), a(z, y)).}
 
-{\tt \% the given single rule}
+%{\tt \% the given single rule}
 
-{\tt RR(a(x, a(y, a(z, u))), a(y, a(z, a(x, u)))).}
+{\tt R(a(x, a(y, a(z, u))), a(y, a(z, a(x, u)))).}
 
 {\tt end\_of\_list.}
 
@@ -132,7 +140,53 @@ Therefore, {\tt mace4} determines that the size of the smallest finite group, fo
 
   }
 
-  After running $mace4$, we found that the smallest number of swapping steps is 3. So $c$ and $d$ can be swapped in $a(b, a(c, a(d, a(e, a(f, a(b, g))))))$ by rewriting in 3 steps to $a(b, a(d, a(c, a(e, a(f, a(b, g))))))$.
+\vspace{2mm}
+
+  After running {\tt mace4 -f  part2\_3b.in}, {\tt mace4} exits with 1 model with domain size 2. Therefore, the smallest number of swapping steps is 2. So $c$ and $d$ can be swapped in $a(b, a(c, a(d, a(e, a(f, a(b, g))))))$ by rewriting in 2 steps to $a(b, a(d, a(c, a(e, a(f, a(b, g))))))$. The model is in the following.
+  
+{\footnotesize
+
+{\tt ============================== DOMAIN SIZE 2 =========================}
+
+{\tt ============================== MODEL =================================}
+
+{\tt interpretation( 2, [number=1, seconds=0], [}
+
+{\tt \ \ \ \ \ \ \ \         function(b, [ 0 ]),}
+
+{\tt \ \ \ \ \ \ \ \         function(c, [ 0 ]),}
+
+{\tt \ \ \ \ \ \ \ \         function(d, [ 0 ]),}
+
+{\tt \ \ \ \ \ \ \ \         function(e, [ 0 ]),}
+
+{\tt \ \ \ \ \ \ \ \         function(f, [ 0 ]),}
+
+{\tt \ \ \ \ \ \ \ \         function(g, [ 0 ]),}
+
+{\tt \ \ \ \ \ \ \ \         function(a(\_,\_), [}
+
+{\tt \	\	\	\ \ \ \	\	\	\ \ \ \ \ \ 			   0, 0,}
+
+{\tt \	\	\	\ \ \ \	\	\	\ \ \ \ \ \ 			   0, 0 ]),}
+
+{\tt \ \ \ \ \ \ \ \         relation(R(\_,\_), [}
+
+{\tt \	\	\	\ \ \ \	\	\	\ \ \ \ \ \ 			   1, 0,}
+
+{\tt \	\	\	\ \ \ \	\	\	\ \ \ \ \ \ 			   0, 0 ]),}
+
+{\tt \ \ \ \ \ \ \ \         relation(RR(\_,\_), [}
+
+{\tt \	\	\	\ \ \ \	\	\	\ \ \ \ \ \ 			   0, 0,}
+
+{\tt \	\	\	\ \ \ \	\	\	\ \ \ \ \ \ 			   0, 0 ])}
+
+{\tt ]).}
+
+{\tt ============================== end of model ==========================}
+
+}
 
 \end{description}
 

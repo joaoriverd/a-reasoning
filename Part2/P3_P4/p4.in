@@ -5,23 +5,24 @@ formulas(assumptions).
 % JR: The problem says that only one is allowed "From A there is a red edge to either C, E or G"
 %     as here we have the formula with "or" it makes me think that it is also possible to have a red
 %     edge to all options, although I'm not sure of this.
-red(a,c) | red(a,e) |red(a,g).
 
-% JR: I think some formulas are missing
+% From A there is a red edge to either C, E or G
+(red(a,c) & red(a,e)) | red(a,g).
+
+% There are red edges BF;BI;CH;
 red(b,f). red(b,i). red(c,h).
 
-% JR: same as first comment
+% From G there is a yellow edge to either D or F.
 yellow(g,d) | yellow(g,f). 
 
+% There is a yellow edge EG.
 yellow(e,h).
 
-% JR: same as first commet
+% From D there is a blue edge to either A or B.
 blue(d,a) | blue(d,b).
 
-% JR: I think some formulas are missing
-blue(c,g). blue(d,i). 
-
-blue(g,h).
+% There are blue edges CG, GH and DI.
+blue(c,g). blue(d,i). blue(g,h).
 
 red(x,y) -> red(y,x).
 
