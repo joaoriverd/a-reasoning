@@ -8,7 +8,9 @@ The goal of this problem is to exploit the power of the recommended tools rather
       $ x \ast(y \ast z)=(x\ast y) \ast z, x \ast I = x $ and $ x \ast inv(x) = I, $
       \end{center}
       for all $x, y, z \epsilon G$. Determine whether in every group each of the four properties
-      \[  I \ast x = x, inv(inv(x)) = x, inv(x) \ast x = I and x \ast y = y \ast x  \]
+      \begin{center}
+      $I \ast x = x, inv(inv(x)) = x, inv(x) \ast x = I $ and $ x \ast y = y \ast x $
+      \end{center}
       holds for all $x, y \epsilon G$. If a property does not hold, determine the size of the smallest finite group for which it does not hold.
   \item[(b)] A term rewrite system consists of the single rule
   \[ a(x, a(y, a(z, u))) \rightarrow a(y, a(z, a(x, u)))), \]
@@ -23,6 +25,8 @@ The goal of this problem is to exploit the power of the recommended tools rather
 
 \begin{description}
   \item[(a)] In this problem, three assumptions are given. So we use $Prover9$ to prove the four properties. The codes are as follows. Here we denote \emph{inv(x)} as $x'$ for the sake of simplicity.
+      
+\vspace{2mm}
 
 {\footnotesize
 
@@ -51,15 +55,56 @@ The goal of this problem is to exploit the power of the recommended tools rather
 {\tt end\_of\_list.}
 
 }
-  After applying the file to $Prover9$, we found that the first 3 properties are proved, but the fourth one is failed. In order to determine the size of the smallest finite group for which it does not hold, we apply the same file to $mace4$ instead of $Prover9$ to find a smallest noncommutative group by finding the conterexample to the statement that all groups are commutative. $mace4$ shows that the size is 6.
+
+\vspace{2mm}
+
+  After applying {\tt prover9 -f part2\_3a.in}, we found that the first 3 properties are proved, but the fourth one is failed. In order to determine the size of the smallest finite group for which it does not hold, we apply {\tt mace4 part$2\_3a$.in} to find the smallest noncommutative group by finding the conterexample to the statement that all groups are commutative. {\tt mace4} exits with 1 model below.
+  
+\vspace{2mm}
+  
+{\tt ============================== DOMAIN SIZE 6 =========================}
+
+{\tt ============================== MODEL =================================}
+
+{\tt interpretation( 6, [number=1, seconds=0], [}
+
+{\tt \ \ \ \ \ \ \ \ function(I, [ 0 ]),}
+
+{\tt \ \ \ \ \ \ \ \ function(c1, [ 1 ]),}
+
+{\tt \ \ \ \ \ \ \ \ function(c2, [ 2 ]),}
+
+{\tt \ \ \ \ \ \ \ \ function('(\_), [ 0, 1, 2, 4, 3, 5 ]),}
+
+{\tt \ \ \ \ \ \ \ \ function(*(\_,\_), [}
+
+{\tt \	\	\	\ \ \ \	\	\	\ \ \ \ \ \ 0, 1, 2, 3, 4, 5,}
+
+{\tt \	\	\	\ \ \ \	\	\	\ \ \ \ \ \ 1, 0, 3, 2, 5, 4,}
+
+{\tt \	\	\	\ \ \ \	\	\	\ \ \ \ \ \ 2, 4, 0, 5, 1, 3,}
+	
+{\tt \	\	\	\ \ \ \	\	\	\ \ \ \ \ \ 3, 5, 1, 4, 0, 2,}
+
+{\tt \	\	\	\ \ \ \	\	\	\ \ \ \ \ \ 4, 2, 5, 0, 3, 1,}
+
+{\tt \	\	\	\ \ \ \	\	\	\ \ \ \ \ \ 5, 3, 4, 1, 2, 0 ])}
+
+{\tt ]).}
+
+{\tt ============================== end of model ==========================}
+  
+\vspace{2mm}
+
+Therefore, {\tt mace4} determines that the size of the smallest finite group, for which $ x \ast y = y \ast x $ does not hold, is 6.
 
   \item[(b)] To determine the possibility of the rewriting in a finite number of steps, we use $mace4$ to find a smallest number of swapping steps by finding the conterexample to the statement that $c$ and $d$ may not swap.
 
   This problem gives only a single rule.  Then the first step is to fulfill the assumptions with some closed terms rewriting according to the slide handout, page267. They are
 
       \[ R(a(x, u), a(u, x)). \]
-      \[ R(x, y) -> R(a(x, z), a(y, z)). \]
-      \[ R(x, y) -> R(a(z, x), a(z, y)).\]
+      \[ R(x, y) \rightarrow R(a(x, z), a(y, z)). \]
+      \[ R(x, y) \rightarrow R(a(z, x), a(z, y)).\]
 
       Then the final $mace4$ codes are
 
