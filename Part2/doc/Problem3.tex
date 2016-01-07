@@ -24,7 +24,7 @@ The goal of this problem is to exploit the power of the recommended tools rather
 \subsection*{Solution:}
 
 \begin{description}
-  \item[(a)] In this problem, three assumptions are given. So we use {\tt Prover9} to prove the four properties straightforwardly. The codes are as follows. Here we denote \emph{inv(x)} as $x'$ for the sake of simplicity.
+  \item[(a)] In this problem, three assumptions are given. So we use {\tt Prover9} to prove the four properties straightforwardly. The expressions in {\tt Prover9} are as follows. Here we denote \emph{inv(x)} as $x'$ for the sake of simplicity.
 
 \vspace{3mm}
 
@@ -58,7 +58,7 @@ The goal of this problem is to exploit the power of the recommended tools rather
 
 \vspace{2mm}
 
-  After applying {\tt prover9 -f part2\_3a.in}, we found that the first 3 properties are proved, but the fourth one, which implies the property of commutativity, is failed. In order to determine the size of the smallest finite group for which it does not hold, we apply {\tt mace4 part$2\_3a$.in} to find the smallest noncommutative group by finding the conterexample to the statement that all groups are commutative. {\tt mace4} exits with 1 model. The model is as follows.
+  After applying {\tt prover9 -f part2\_3a.in}, we found that the first 3 properties are proved, but the fourth one, which implies the property of commutativity, is failed. In order to determine the size of the smallest finite group for which it does not hold, we apply {\tt mace4 part$2\_3a$.in} to find the smallest noncommutative group by finding the counterexample to the statement that all groups are commutative. {\tt Mace4} exits with 1 model. The model is as follows.
 
 \vspace{3mm}
 
@@ -94,25 +94,24 @@ The goal of this problem is to exploit the power of the recommended tools rather
 
 {\tt ============================== end of model ==========================}
 
-\vspace{2mm}
+\vspace{3mm}
 
-Therefore, {\tt mace4} proved that the size of the smallest finite group, for which $ x \ast y = y \ast x $ does not hold, is 6.
+Therefore, {\tt Mace4} proved that the size of the smallest finite group, for which $ x \ast y = y \ast x $ does not hold, is 6.
 
-  \item[(b)] To determine the possibility of the rewriting in a finite number of steps, we use {\tt mace4} to find the smallest number of swapping steps by finding the conterexample to the statement that $c$ and $d$ may not swap.
+  \item[(b)] To determine the possibility of the rewriting in a finite number of steps, we use {\tt Prover9} to prove the possibility.
 
-  This problem gives only a single rewriting rule, denoted as $R$. So we have \[ a(x, a(y, a(z, u))) \rightarrow_{R} a(y, a(z, a(x, u)))), \]
-  Here $R$ means single rewrite step.
+  This problem gives only a single rewriting rule, so the TRS $R$ consists of the rule  \[ a(x, a(y, a(z, u))) \rightarrow_{R} a(y, a(z, a(x, u)))), \]
+  %Here $R$ means single rewrite step.
 
-  The rewriting terms are the closed terms composed from the constants $b, c, d, e, f, g$. We want to show that
-  \[ a(b, a(c, a(d, a(e, a(f, a(b, g)))))) \rightarrow_{RR} a(b, a(d, a(c, a(e, a(f, a(b, g)))))). \]
-  Here $RR$ means zero or more rewrite steps.
+  The rewriting terms are the closed terms composed from the constants $b, c, d, e, f, g$. We want to show that the rewriting of \[ a(b, a(c, a(d, a(e, a(f, a(b, g)))))) \rightarrow a(b, a(d, a(c, a(e, a(f, a(b, g)))))). \] can be done in zero or more rewrite steps.
+  %Here $RR$ means zero or more rewrite steps.
 
 
       %\[ R(a(x, u), a(u, x)). \]
       %\[ R(x, y) \rightarrow R(a(x, z), a(y, z)). \]
       %\[ R(x, y) \rightarrow R(a(z, x), a(z, y)).\]
 
-      Then the final {\tt mace4} codes are
+      Expressed in {\tt Prover9}:
 
 \vspace{2mm}
 
@@ -122,78 +121,78 @@ Therefore, {\tt mace4} proved that the size of the smallest finite group, for wh
 
 %{\tt R(a(x, u), a(u, x)).}
 
-%{\tt R(x, y) -> R(a(x, z), a(y, z)).}
-
-%{\tt R(x, y) -> R(a(z, x), a(z, y)).}
-
 %{\tt \% the given single rule}
 
-{\tt R(a(x, a(y, a(z, u))), a(y, a(z, a(x, u)))).}
+{\tt R(a(x,a(y,a(z,u))),a(y,a(z,a(x,u)))).}
+
+{\tt R(x,y) -> R(a(x,z),a(y,z)).}
+
+{\tt R(x,y) -> R(a(z,x),a(z,y)).}
+
+{\tt RR(x,x). }
+
+{\tt (RR(x,y) \& R(y,z)) -> RR(x,z). }
 
 {\tt end\_of\_list.}
 
 {\tt formulas(goals).}
 
-{\tt RR(a(b, a(c, a(d, a(e, a(f, a(b, g)))))), a(b, a(d, a(c, a(e, a(f, a(b, g))))))).}
+{\tt RR(a(b,a(c,a(d,a(e,a(f,a(b,g)))))),a(b,a(d,a(c,a(e,a(f,a(b, g))))))).}
 
 {\tt end\_of\_list.  }
 
-  }
+}
 
-\vspace{2mm}
+\vspace{3mm}
 
-  After running {\tt mace4 -f  part2\_3b.in}, {\tt mace4} exits with 1 model with domain size 2. Therefore, the smallest number of swapping steps is 2. So $c$ and $d$ can be swapped in $a(b, a(c, a(d, a(e, a(f, a(b, g))))))$ by rewriting in 2 steps to $a(b, a(d, a(c, a(e, a(f, a(b, g))))))$. The model is in the following.
-  
+$a$ = $a$ binary operator, $R$ = single rewrite step, and $RR$ = zero or more rewrite steps.
+
+  After running {\tt prover9 -f  part2\_3b.in}, {\tt Prover9} exits with 1 proof. Therefore, $c$ and $d$ can be swapped in $a(b, a(c, a(d, a(e, a(f, a(b, g))))))$ by rewriting in a finite number of steps to $a(b, a(d, a(c, a(e, a(f, a(b, g))))))$. The proof is in the following.
+ 
+\vspace{3mm} 
+
 {\footnotesize
 
-{\tt ============================== DOMAIN SIZE 2 =========================}
+{\tt ============================== PROOF =================================}
 
-{\tt ============================== MODEL =================================}
+{\tt \% Proof 1 at 0.09 (+ 0.03) seconds.}
 
-{\tt interpretation( 2, [number=1, seconds=0], [}
+{\tt \% Length of proof is 22.}
 
-{\tt \ \ \ \ \ \ \ \         function(b, [ 0 ]),}
+{\tt \% Level of proof is 7.}
 
-{\tt \ \ \ \ \ \ \ \         function(c, [ 0 ]),}
+{\tt \% Maximum clause weight is 27.}
 
-{\tt \ \ \ \ \ \ \ \         function(d, [ 0 ]),}
+{\tt \% Given clauses 195.}
 
-{\tt \ \ \ \ \ \ \ \         function(e, [ 0 ]),}
+{\tt 2 R(x,y) -> R(a(z,x),a(z,y)) \# label(non\_clause).  [assumption].}
 
-{\tt \ \ \ \ \ \ \ \         function(f, [ 0 ]),}
+{\tt 3 RR(x,y) \& R(y,z) -> RR(x,z) \# label(non\_clause).  [assumption].}
 
-{\tt \ \ \ \ \ \ \ \         function(g, [ 0 ]),}
+{\tt 4 RR(a(b,a(c,a(d,a(e,a(f,a(b,g)))))),a(b,a(d,a(c,a(e,a(f,a(b,g))))))) \#
+label(non\_clause) \# label(goal).}
 
-{\tt \ \ \ \ \ \ \ \         function(a(\_,\_), [}
+$\cdots \cdots \cdots$
 
-{\tt \	\	\	\ \ \ \	\	\	\ \ \ \ \ \ 			   0, 0,}
+{\tt 800 -RR(a(b,a(c,a(d,a(e,a(f,a(b,g)))))),a(c,a(d,a(f,a(e,a(b,a(b,g))))))).  [ur(9,b,38,a,c,116,a)].}
 
-{\tt \	\	\	\ \ \ \	\	\	\ \ \ \ \ \ 			   0, 0 ]),}
+{\tt 1604 RR(a(x,a(y,a(z,a(u,a(w,a(v5,v6)))))),a(y,a(z,a(w,a(u,a(v5,a(x,v6))))))).  [ur(9,a,319,a,b,170,a)].}
 
-{\tt \ \ \ \ \ \ \ \         relation(R(\_,\_), [}
+{\tt 1605 \$F.  [resolve(1604,a,800,a)].}
 
-{\tt \	\	\	\ \ \ \	\	\	\ \ \ \ \ \ 			   1, 0,}
-
-{\tt \	\	\	\ \ \ \	\	\	\ \ \ \ \ \ 			   0, 0 ]),}
-
-{\tt \ \ \ \ \ \ \ \         relation(RR(\_,\_), [}
-
-{\tt \	\	\	\ \ \ \	\	\	\ \ \ \ \ \ 			   0, 0,}
-
-{\tt \	\	\	\ \ \ \	\	\	\ \ \ \ \ \ 			   0, 0 ])}
-
-{\tt ]).}
-
-{\tt ============================== end of model ==========================}
+{\tt ============================== end of proof ==========================}
 
 }
+
+\vspace{3mm} 
 
 \end{description}
 
 \subsection*{Remark:}
 
+Since Problem 3$a$ gives the rewriting rules and the goals explicitly, its expression in {\tt Prover9} also goes straightforwardly. The searching for a finite model with the last property, which is failed in the proof of {\tt Prover9}, is done by the tool {\tt Mace4}. Problem 3$b$ requires the definition of the term rewrite system (TRS) $R$ to complete the proof. {\tt Prover9} is an automated theorem prover for first-order and equational logic, and {\tt Mace4} is an automated searcher for finite models and counterexamples. Both the tools are very powerful in automated reasoning. Thanks to their programmer, William McCune.
 
-\subsection*{Generalization:}
+%\subsection*{Generalization:}
 
 
 

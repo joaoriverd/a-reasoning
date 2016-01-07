@@ -27,13 +27,13 @@ Edge definition: A red edge from $x$ to $y$ is denoted as $red(x,y)$. A yellow e
 
 Path definition: A path can be an edge or a sequential connected edges. A path starting with a red edge is called as $redpath$. Similarly, there are $bluepath$ and $ypath$. Particularly, a $redpath$ can be a single red edge or a red edge followed by a $bluepath$ or a $ypath$. Likewise, a $bluepath$ can be a single blue edge or a blue edge followed by a $redpath$ or a $ypath$, and a $ypath$ can be a single yellow edge or a yellow edge followed by a $redpath$ or a $bluepath$. In this way we can make sure that the paths, which are $redpath$, $bluepath$ or $ypath$, will not have two consecutive edges in the same color.
 
-We generalize this problem for an undirected network with $n$ nodes and $m$ colors of the edges. We introduce 
+We generalize this problem for an undirected network with $n$ nodes and $m$ colors of the edges. We introduce
 \begin{center}
-$\mathbb{N}$ as the set of nodes, $\mathbb{N} = \{A, B, C, ... \}$, 
+$\mathbb{N}$ as the set of nodes, $\mathbb{N} = \{A, B, C, ... \}$,
 
-$\mathbb{E}$ as the set of colors, $\mathbb{E} = \{color_1, color_2, ...\}$, 
+$\mathbb{E}$ as the set of colors, $\mathbb{E} = \{color_1, color_2, ...\}$,
 
-and $\mathbb{P}$ as the set of color paths, $\mathbb{P} = \{cpath_1, cpath_2, ...\}$. 
+and $\mathbb{P}$ as the set of color paths, $\mathbb{P} = \{cpath_1, cpath_2, ...\}$.
 \end{center}
 Subsequently, we have the mappings
 \begin{center}
@@ -44,22 +44,22 @@ With reference to our definitions, both edges and paths have dependence of the c
 
 \begin{itemize}
   \item Edge definition
-  
+
   Each edge has a starting node and a ending node, and each edge has color dependency.
   \[ \bigwedge_{x=1}^m \forall_{d \in \mathbb{D}} [color_x(fst(d), snd(d))] \;\; \wedge \]
   \[ \bigwedge_{x=1}^m \forall_{n_1, n_2 \in \mathbb{N}} [color_x(n_1, n_2) : color_x(n_2, n_1)] \]
-  
+
   \item Path definition
-  
+
   Likewise, each path has a starting node and a ending node, and each path has color dependency.
   \[ \bigwedge_{x=1}^m \forall_{n_1, n_2 \in \mathbb{N}} [cpath_x(n_1, n_2) : cpath_x(n_2, n_1)] \;\; \wedge \]
   \[ \bigwedge_{x=1}^m \bigwedge_{y=1,y\neq x}^m \forall_{n_1, n_2, n_3 \in \mathbb{N}} [color_x(n_1, n_2) \wedge cpath_y(n_2, n_3) : cpath_x(n_2, n_3)] \]
-  
+
   \item Goals
-  
+
   The goal of the problem is to prove the existence of a path from two nodes, $A$ to $B$, composed with the edges that none of them has the same color as its neighbour(s).
   \[ \bigvee_{x=0}^m cpath_x(A, B) \]
-  
+
 \end{itemize}
 
 This problem gives $\mathbb{N} = \{A, B, C, D, E, F, G, H, I \}$ and $\mathbb{E} = \{red, yellow, blue \}$. Accordingly, we derive $\mathbb{P} = \{redpath, ypath, bluepath\}$. We use {\tt Prover9} to prove the existence of such a path. The codes are as follows.
@@ -141,7 +141,7 @@ This problem gives $\mathbb{N} = \{A, B, C, D, E, F, G, H, I \}$ and $\mathbb{E}
 After applying {\tt prover9 -f part2\_4.in}, {\tt Prover9} exits with 1 proof. Hence, the existence that a path from $A$ to $B$ has no two consecutive edges in the same color is proved to be true.
 
 \subsection*{Remark:}
-We proved that there exits a path from $A$ to $B$ has no two consecutive edges in the same color. If a real applicable solution is provided, the proof will be more reliable. However, {\tt Prover9} is a theorem prover for giving proofs based on resolution. It generates only the proof steps(resolution steps), not a satisfiable solution. Another approach is to derive the solution from the resolution steps. Unfortunately, the proof consists of 406 steps. It is too complicated to process them.  
+We proved that there exits a path from $A$ to $B$ has no two consecutive edges in the same color. If a real applicable solution is provided, the proof will be more reliable. However, {\tt Prover9} is a theorem prover for giving proofs based on resolution. It generates only the proof steps(resolution steps), not a satisfiable solution. Another approach is to derive the solution from the resolution steps. Unfortunately, the proof consists of 406 steps. It is too complicated to process them.
 
 {\tt Prover9} exits with the following proof.
 
@@ -182,9 +182,9 @@ $\cdots \cdots \cdots$
 \vspace{2mm}
 
 \subsection*{Generalization:}
-The two introduced sets $\mathbb{N}$ and $\mathbb{E}$ ,are inter-related. The number of nodes in the network limits the number of colors in the network. For instance, there is a two-node network. This network has only two edges, then two colors in maximum.
+The two introduced sets $\mathbb{N}$ and $\mathbb{E}$ ,are inter-related. The number of nodes in the network limits the number of colors in the network. For instance, there is a two-node network. This network has only two edges, then it can have two colors in maximum.
 
-Once there exists a satisfiable path, there should be infinitely many paths satisfy that the path has no two consecutive edges in the same color. Because the same node may be reached many times. In real-time world, the same actions done in different time unit are different.
+Once there exists a satisfiable path, there should be infinitely many paths satisfying the fact that the path has no two consecutive edges in the same color. Because one node may be reached several times. In the real-time world, the same actions done in different time units lead to different consequences.
 
 
 
