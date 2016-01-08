@@ -236,13 +236,46 @@ Trace Type: Counterexample\newline
 }
 \fontfamily{helvet}\selectfont
 \end{description}
-The specification is false and NuSMV gives a counterexample where the condition can be reached. We conclude that for this case it is possible to arrive to the situation specified by the problem.
+The specification is false and NuSMV gives a counterexample where the condition can be reached. We conclude that for this case it is possible to arrive to the situation specified by the problem. The following table depicts this result in detail:
+
+  \begin{center}
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+  \hline
+  $step$ & Action & $a_1$ & $a_2$ & $a_3$  \\
+  \hline
+  0  & Init  & 3 & 0 & 0 \\
+  1  & Pour $a1$ in $a2$  & 0 & 3 & 0 \\
+  2  & Fill $a1$          & 144 & 3 & 0 \\
+  3  & Pour $a1$ in $a2$  & 116 & 3 & 28 \\
+  4  & Pour $a3$ in $a2$  & 116 & 31 & 0 \\
+  5  & Pour $a1$ in $a3$  & 88 &  31 & 28 \\
+  6  & Pour $a3$ in $a2$  & 88 &  59 & 0 \\
+  7  & Pour $a1$ in $a3$  & 60 &  59 & 28 \\
+  8  & Pour $a3$ in $a2$  & 60 &  72 & 15 \\
+  9  & Pour $a2$ in $a1$  & 132 &  0 & 15 \\
+  10 & Pour $a3$ in $a2$  & 132 & 15 & 0 \\
+  11 & Pour $a1$ in $a3$  & 104 & 15 & 28 \\
+  12 & Pour $a3$ in $a2$  & 104 & 43 & 0 \\
+  13 & Pour $a1$ in $a3$  &  76 & 43 & 28 \\
+  14 & Pour $a3$ in $a2$  &  76 & 71 & 0 \\
+  15 & Pour $a1$ in $a3$  &  48 & 71 & 28 \\
+  16 & Pour $a3$ in $a2$  &  48 & 72 & 27 \\ 
+  17 & Pour $a2$ in $a1$  &  120 & 0 & 27 \\ 
+  18 & Pour $a3$ in $a2$  &  120 & 27 & 0 \\
+  19 & Pour $a1$ in $a3$  &  92 & 27 & 28 \\
+  20 & Pour $a3$ in $a2$  &  92 & 55 & 0 \\
+  21 & Pour $a1$ in $a3$  &  64 & 55 & 28 \\
+  22 & Pour $a3$ in $a2$  &  64 & 72 & 11 \\
+  23 & Empty $a2$         &  64 & 0  & 11 \\ 
+  24 & Pour $a3$ in $a2$  &  64 & 11 & 0 \\
+  25 & Pour $a1$ in $a3$  &  36 & 11 & 28 \\
+  26 & Empty $a3$         &  36 & 11 & 0 \\
+  27 & Pour $a1$ in $a3$  &   \textbf{8} & \textbf{11} & 28 \\  
+  \hline
+\end{tabular}
+\end{center}
 
 \subsection*{Remark:}
 
 
 \subsection*{Generalization:}
-
-
-
-
