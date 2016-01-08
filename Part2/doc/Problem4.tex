@@ -40,20 +40,24 @@ Subsequently, we have the mappings
 $color_x : \mathbb{N}\times \mathbb{N} \rightarrow \mathbb{B}$, and $cpath_x : \mathbb{N}\times \mathbb{N} \rightarrow \mathbb{B}$.
 \end{center}
 
-With reference to our definitions, both edges and paths have dependence of the colors. So we introduce $\mathbb{D}_x$ as the set of dependence relations with $color_x$. Now we can formulate the conditions.
+With reference to our definitions, both edges and paths have dependence of the colors. So we introduce $\mathbb{D}_x$ as the set of nodes pairs indicating the color dependence of the nodes in each pair. For instance, there is a red edge between node $A$ and node $B$, then $(A, B) \in \mathbb{D}_{red} $. Some nodes in the network have only one edge in a special color. Then we introduce $\mathbb{G}_x^I \subseteq \mathbb{N}$, where $I \in \mathbb{N}$, as the set of the nodes, only one of which has an edge with node $I$ in Color $color_x$.
+
+\noindent Now we formulate the conditions.
 
 \begin{itemize}
   \item Edge definition
 
-  Each edge has a starting node and a ending node, and each edge has color dependency.
-  \[ \bigwedge_{x=1}^m \forall_{d \in \mathbb{D}} [color_x(fst(d), snd(d))] \;\; \wedge \]
-  \[ \bigwedge_{x=1}^m \forall_{n_1, n_2 \in \mathbb{N}} [color_x(n_1, n_2) : color_x(n_2, n_1)] \]
+  Each edge has a starting node and an ending node, and each edge has color dependency.
+  \[ \bigwedge_{x=1}^m \forall_{d \in \mathbb{D}_x} [color_x(fst(d), snd(d))] \;\; \wedge \]
+  \[ \bigwedge_{x=1}^m \forall_{n_1, n_2 \in \mathbb{N}} [color_x(n_1, n_2) : color_x(n_2, n_1)] \;\; \wedge \]
+  \[ \bigwedge_{x=1}^m \exists_{g \in \mathbb{G}_x^I}^1 [color_x(I, g)] \]
+
 
   \item Path definition
 
   Likewise, each path has a starting node and a ending node, and each path has color dependency.
-  \[ \bigwedge_{x=1}^m \forall_{n_1, n_2 \in \mathbb{N}} [cpath_x(n_1, n_2) : cpath_x(n_2, n_1)] \;\; \wedge \]
-  \[ \bigwedge_{x=1}^m \bigwedge_{y=1,y\neq x}^m \forall_{n_1, n_2, n_3 \in \mathbb{N}} [color_x(n_1, n_2) \wedge cpath_y(n_2, n_3) : cpath_x(n_2, n_3)] \]
+  \[ \bigwedge_{x=1}^m \forall_{n_1, n_2 \in \mathbb{N}} [color_x(n_1, n_2) : cpath_x(n_1, n_2)] \;\; \wedge \]
+  \[ \bigwedge_{x=1}^m \bigwedge_{y=1,y\neq x}^m \forall_{n_1, n_2, n_3 \in \mathbb{N}} [color_x(n_1, n_2) \wedge cpath_y(n_2, n_3) : cpath_x(n_1, n_3)] \]
 
   \item Goals
 
@@ -62,7 +66,17 @@ With reference to our definitions, both edges and paths have dependence of the c
 
 \end{itemize}
 
-This problem gives $\mathbb{N} = \{A, B, C, D, E, F, G, H, I \}$ and $\mathbb{E} = \{red, yellow, blue \}$. Accordingly, we derive $\mathbb{P} = \{redpath, ypath, bluepath\}$. We use {\tt Prover9} to prove the existence of such a path. The codes are as follows.
+\noindent This problem gives
+
+\begin{center}
+$\mathbb{N} = \{A, B, C, D, E, F, G, H, I \}$, $\mathbb{E} = \{red, yellow, blue \}$,
+
+$\mathbb{G}_{red}^A = \{C,E, G\}, \mathbb{G}_{yellow}^G = \{D, F\}$ and $\mathbb{G}_{blue}^D = \{A, B\} $,
+
+$\mathbb{D}_{red} = \{(B,F), (B,I), (C,H) \}$, $\mathbb{D}_{yellow} = \{(E,G) \}$ and $\mathbb{D}_{blue} = \{(C,G), (D,I), (E,H) \}$.
+
+\end{center}
+Accordingly, we derive $\mathbb{P} = \{redpath, ypath, bluepath\}$. We use {\tt Prover9} to prove the existence of such a path. The codes are as follows.
 
 \vspace{3mm}
 
@@ -74,7 +88,11 @@ This problem gives $\mathbb{N} = \{A, B, C, D, E, F, G, H, I \}$ and $\mathbb{E}
 
 {\tt \% From A there is a red edge to either C, E or G. }
 
-{\tt (red(a,c) \& red(a,e)) | red(a,g).}
+{\tt (red(a,c) \& -red(a,e) \& -red(a,g)) | }
+
+{\tt (-red(a,c) \& red(a,e) \& -red(a,g)) | }
+
+{\tt (-red(a,c) \& -red(a,e) \& red(a,g)). }
 
 {\tt \% There are red edges BF, BI, and CH. }
 
@@ -82,7 +100,7 @@ This problem gives $\mathbb{N} = \{A, B, C, D, E, F, G, H, I \}$ and $\mathbb{E}
 
 {\tt \% From G there is a yellow edge to either D or F.}
 
-{\tt yellow(g,d) | yellow(g,f).}
+{\tt (yellow(g,d) \& -yellow(g,f)) | (yellow(g,f) \& -yellow(g,d)). }
 
 {\tt \% There is a yellow edge EG.}
 
@@ -90,7 +108,7 @@ This problem gives $\mathbb{N} = \{A, B, C, D, E, F, G, H, I \}$ and $\mathbb{E}
 
 {\tt \% From D there is a blue edge to either A or B.}
 
-{\tt blue(d,a) | blue(d,b).}
+{\tt (blue(d,a) \& -blue(d,b)) | (blue(d,b) \& -blue(d,a)).}
 
 {\tt \% There are blue edges CG, GH and DI. }
 
@@ -119,12 +137,6 @@ This problem gives $\mathbb{N} = \{A, B, C, D, E, F, G, H, I \}$ and $\mathbb{E}
 {\tt blue(x,y) \& redpath(y,z) -> bluepath(x,z).}
 
 {\tt blue(x,y) \& ypath(y,z) -> bluepath(x,z).}
-
-{\tt redpath(x,y) -> redpath(y,x).}
-
-{\tt bluepath(x,y) -> bluepath(y,x).}
-
-{\tt ypath(x,y) -> ypath(y,x).}
 
 {\tt end\_of\_list.}
 
@@ -155,25 +167,25 @@ We proved that there exits a path from $A$ to $B$ has no two consecutive edges i
 
 {\tt \% Length of proof is 58.}
 
-{\tt \% Level of proof is 11.}
+{\tt \% Level of proof is 12.}
 
-{\tt \% Maximum clause weight is 9.}
+{\tt \% Maximum clause weight is 12.}
 
-{\tt \% Given clauses 322.}
+{\tt \% Given clauses 148.}
 
-{\tt 1 red(a,c) \& red(a,e) | red(a,g) \# label(non\_clause).  [assumption].}
+{\tt 1 red(a,c) \& -red(a,e) \& -red(a,g) | -red(a,c) \& red(a,e) \& -red(a,g) | -red(a,c) \& -red(a,e) \& red(a,g) \# label(non\_clause).  [assumption]. }
 
-{\tt 2 red(x,y) -> red(y,x) \# label(non\_clause).  [assumption].}
-
-$\cdots \cdots \cdots$
+{\tt 2 yellow(g,d) \& -yellow(g,f) | yellow(g,f) \& -yellow(g,d) \# label(non\_clause).  [assumption].}
 
 $\cdots \cdots \cdots$
 
-{\tt 395 yellow(g,d).  [resolve(394,a,196,b),unit\_del(b,44)].}
+$\cdots \cdots \cdots$
 
-{\tt 402 -ypath(g,b).  [ur(39,a,394,a,c,44,a)].}
+{\tt 271 red(a,g).  [back\_unit\_del(247),unit\_del(a,267)].}
 
-{\tt 406 \$F.  [resolve(395,a,168,a),unit\_del(a,402)].}
+{\tt 274 yellow(g,d).  [back\_unit\_del(99),unit\_del(a,271)].}
+
+{\tt 283 \$F.  [ur(64,a,271,a,c,143,a),unit\_del(a,274)].}
 
 {\tt ============================== end of proof ==========================}
 
@@ -182,7 +194,7 @@ $\cdots \cdots \cdots$
 \vspace{2mm}
 
 \subsection*{Generalization:}
-The two introduced sets $\mathbb{N}$ and $\mathbb{E}$ ,are inter-related. The number of nodes in the network limits the number of colors in the network. For instance, there is a two-node network. This network has only two edges, then it can have two colors in maximum.
+The two introduced sets $\mathbb{N}$ and $\mathbb{E}$, are inter-related. The number of nodes in the network limits the number of colors in the network. For instance, there is a two-node network. This network has only two edges, then it can have two colors in maximum.
 
 Once there exists a satisfiable path, there should be infinitely many paths satisfying the fact that the path has no two consecutive edges in the same color. Because one node may be reached several times. In the real-time world, the same actions done in different time units lead to different consequences.
 

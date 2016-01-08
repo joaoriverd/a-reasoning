@@ -96,7 +96,7 @@ The goal of this problem is to exploit the power of the recommended tools rather
 
 \vspace{3mm}
 
-Therefore, {\tt Mace4} proved that the size of the smallest finite group, for which $ x \ast y = y \ast x $ does not hold, is 6.
+{\tt Mace4} generates the counterexample of a group of size 6, therefore, the size of the smallest finite group, for which $ x \ast y = y \ast x $ does not hold, is 6.
 
   \item[(b)] To determine the possibility of the rewriting in a finite number of steps, we use {\tt Prover9} to prove the possibility.
 
@@ -145,11 +145,11 @@ Therefore, {\tt Mace4} proved that the size of the smallest finite group, for wh
 
 \vspace{3mm}
 
-$a$ = $a$ binary operator, $R$ = single rewrite step, and $RR$ = zero or more rewrite steps.
+In the codes, $a$ = $a$ binary operator, $R$ = single rewrite step, and $RR$ = zero or more rewrite steps.
 
   After running {\tt prover9 -f  part2\_3b.in}, {\tt Prover9} exits with 1 proof. Therefore, $c$ and $d$ can be swapped in $a(b, a(c, a(d, a(e, a(f, a(b, g))))))$ by rewriting in a finite number of steps to $a(b, a(d, a(c, a(e, a(f, a(b, g))))))$. The proof is in the following.
- 
-\vspace{3mm} 
+
+\vspace{3mm}
 
 {\footnotesize
 
@@ -184,7 +184,7 @@ $\cdots \cdots \cdots$
 
 }
 
-\vspace{3mm} 
+\vspace{3mm}
 
 \end{description}
 
