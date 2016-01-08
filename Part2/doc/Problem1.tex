@@ -132,7 +132,9 @@ Now we try to find a solution for each interrogant of the original problem:
   \[a_{1\_10} = a_{1\_3} \;\;\wedge\]
   \[a_{2\_10} = a_{2\_3} \;\;\wedge\]
   \[a_{3\_10} = a_{3\_3} \;\;\wedge\]
-  \[a_{1\_10} = a_{1\_3} \;\;\wedge\]
+  \[P_{\_10} = P_{\_3} \;\;\wedge\]
+  \[T_{\_10} = T_{\_3} \;\;\wedge\]
+  \[d_{\_10} = d_{\_3} \;\;\wedge\]
 
   Choosing $T = 320$ and applying {\tt yices-smt -m part$2\_1b$.smt} to the generated code, the tool yields the following result:
 
@@ -183,12 +185,12 @@ $\cdots \cdots$
 \end{tabular}
 \end{center}
 
-  As can be observed, state 10 is exactly the same as state 3, therefor we have found a route that satisfies the requirement. 
+  As can be observed, state 10 is exactly the same as state 3, therefor we have found a route that satisfies the requirement.
 
   \item[(c)]  Figure out whether it is possible if the capacity of the truck is set to 318.
 
   Similarly, we prove that it is possible to deliver food forever for this case too. We generate the yices' code choosing $T = 318$ and adding the same extra condition as in \textbf{b)}, after applying {\tt yices-smt -m part$2\_1c$.smt} it yields the following result:
-  
+
     \fontfamily{lmtt}\selectfont
   {\footnotesize
   \noindent
@@ -216,9 +218,9 @@ $\cdots \cdots$
   }
   \fontfamily{helvet}\selectfont
   \vspace{3mm}
-  
+
   The following table shows the solution for this problem:
-  
+
 \begin{center}
 \begin{tabular}{|c|c|c|c|a|c|c|c|c|c|c|a|}
   \hline
@@ -233,15 +235,19 @@ $\cdots \cdots$
   \hline
 \end{tabular}
 \end{center}
-  
+
 \end{description}
 
 
 \subsection*{Remark:}
+In order to make the code clear some variable renaming was necessary. For instance for representing village 1 after 10 steps, the notation $a1\_10$ was preferred over $a110$, the later can lead for multiple interpretations.
+ 
+ It is also worth to mention that we started solving this problem using NuSMV tool instead of yices, the advantage of NuSMV is that the code can be more easily expressed, however it was taking to long to solve each problem, so we decided to migrate to yices.
+
 
 
 \subsection*{Generalization:}
 
-
+We solve this problem choosing $T = 300$, $T = 318$ and $T = 320$. But it would be interesting to know the result of other values of $T$. We found out that choosing $T=316$ it is impossible to deliver food in such a way that all villages consume forever. For $T=317$ it was tested using $m =300$ (300 travels) and it was still satisfiable.
 
 
