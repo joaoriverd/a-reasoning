@@ -259,23 +259,24 @@ The specification is false and NuSMV gives a counterexample where the condition 
   13 & Pour $a1$ in $a3$  &  76 & 43 & 28 \\
   14 & Pour $a3$ in $a2$  &  76 & 71 & 0 \\
   15 & Pour $a1$ in $a3$  &  48 & 71 & 28 \\
-  16 & Pour $a3$ in $a2$  &  48 & 72 & 27 \\ 
-  17 & Pour $a2$ in $a1$  &  120 & 0 & 27 \\ 
+  16 & Pour $a3$ in $a2$  &  48 & 72 & 27 \\
+  17 & Pour $a2$ in $a1$  &  120 & 0 & 27 \\
   18 & Pour $a3$ in $a2$  &  120 & 27 & 0 \\
   19 & Pour $a1$ in $a3$  &  92 & 27 & 28 \\
   20 & Pour $a3$ in $a2$  &  92 & 55 & 0 \\
   21 & Pour $a1$ in $a3$  &  64 & 55 & 28 \\
   22 & Pour $a3$ in $a2$  &  64 & 72 & 11 \\
-  23 & Empty $a2$         &  64 & 0  & 11 \\ 
+  23 & Empty $a2$         &  64 & 0  & 11 \\
   24 & Pour $a3$ in $a2$  &  64 & 11 & 0 \\
   25 & Pour $a1$ in $a3$  &  36 & 11 & 28 \\
   26 & Empty $a3$         &  36 & 11 & 0 \\
-  27 & Pour $a1$ in $a3$  &   \textbf{8} & \textbf{11} & 28 \\  
+  27 & Pour $a1$ in $a3$  &   \textbf{8} & \textbf{11} & 28 \\
   \hline
 \end{tabular}
 \end{center}
 
 \subsection*{Remark:}
-
+In contrast to the previous problems, this time we use NuSMV to solve the three variations of this particular problem. Although this can also be expressed in SMT format and find a solution using yices, we decided to exploit the power of NuSMV in finding counterexamples, so the tool generates a solution automatically if the given specification does not hold. Also the code results to be more compact and understandable using this tool.
 
 \subsection*{Generalization:}
+Since we generalize this problem for any number of bottles of any size, it would be interesting to find a size for bottle 1 in order to satisfy the subsection b) of this problem. We found out such case by reducing the capacity of bottle 1 just one unit, so choosing $max(1)=143$ and $max(2)=80$ the tool yields that the specification $G\;\neg(a1 = 8 \wedge a2 = 11)$ is false and it shows a solution where after performing 57 actions bottle 1 and 2 contain 8 and 11 units of water respectively.  
